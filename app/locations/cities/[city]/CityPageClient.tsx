@@ -306,7 +306,6 @@ export default function CityPageClient({ params }: Props) {
         </div>
       </section>
 
-      
       <section className="py-12 md:py-16 bg-gradient-to-b from-black to-gray-900 text-white">
         <div className="container">
           <h2 className="text-3xl font-bold mb-8 text-center">Our Services in {city.name}</h2>

@@ -15,14 +15,28 @@ import {
 } from "@/components/ui/navigation-menu"
 import { allPracticeAreas } from "@/lib/practice-areas"
 
-const practiceAreas = [
-  { title: "Personal Injury", href: "/practice-areas/personal-injury" },
-  { title: "Car Accidents", href: "/practice-areas/car-accidents" },
-  { title: "Medical Malpractice", href: "/practice-areas/medical-malpractice" },
-  { title: "Workers' Compensation", href: "/practice-areas/workers-compensation" },
-  { title: "Wrongful Death", href: "/practice-areas/wrongful-death" },
-  { title: "Product Liability", href: "/practice-areas/product-liability" },
-]
+const states = [
+  "California",
+  "Texas",
+  "Florida",
+  "New York",
+  "Illinois",
+  "Pennsylvania",
+  "Ohio",
+  "Georgia",
+  "North Carolina",
+  "Michigan",
+  "New Jersey",
+  "Virginia",
+].map((state) => ({
+  title: state,
+  href: `/locations/states/${state.toLowerCase().replace(/\s+/g, "-")}`,
+}))
+
+const practiceAreas = allPracticeAreas.map((area) => ({
+  title: area.title,
+  href: area.slug,
+}))
 
 export function Header() {
   const pathname = usePathname()
@@ -88,58 +102,25 @@ export function Header() {
                 <NavigationMenuTrigger className="!bg-transparent !text-white hover:!text-yellow-600 focus:!bg-transparent hover:!bg-transparent">
                   Practice Areas
                 </NavigationMenuTrigger>
-
                 <NavigationMenuContent>
-                  <div className="p-4 w-full sm:w-[400px] md:w-[550px] lg:w-[700px]">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                      {allPracticeAreas.map((item) => (
-                        <Link
-                          key={item.title}
-                          href={item.slug}
-                          className="block rounded-md px-2 py-1 text-base hover:bg-gray-500/10 text-gray-900 hover:text-yellow-900 transition"
-                        >
-                          {item.title}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
+                <DesktopDropdown
+                    viewAllLinks="/practice-areas"
+                    items={practiceAreas}
+                    type="practice"
+                  />
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
-              <NavigationMenuItem className="px-0 px-0">
+              <NavigationMenuItem className="px-0">
                 <NavigationMenuTrigger className="!bg-transparent !text-white hover:!text-yellow-600 focus:!bg-transparent hover:!bg-transparent">
                   Locations
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="p-4 w-full sm:w-[400px] md:w-[550px] lg:w-[700px]">
-                    <Link href="/locations" className="text-sm font-medium text-black hover:text-yellow-600">
-                      View All Locations
-                    </Link>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-3">
-                      {[
-                        "California",
-                        "Texas",
-                        "Florida",
-                        "New York",
-                        "Illinois",
-                        "Pennsylvania",
-                        "Ohio",
-                        "Georgia",
-                        "North Carolina",
-                        "Michigan",
-                        "New Jersey",
-                        "Virginia",
-                      ].map((state) => (
-                        <Link
-                          key={state}
-                          href={`/locations/states/${state.toLowerCase().replace(/\s+/g, "-")}`}
-                          className="block rounded-md px-2 py-1 text-base hover:bg-gray-500/10 text-gray-900 hover:text-yellow-900 transition"
-                        >
-                          {state}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
+                  <DesktopDropdown
+                    viewAllLinks="/locations"
+                    items={states}
+                    type="location"
+                  />
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
@@ -219,7 +200,7 @@ export function Header() {
               title="Practice Areas"
               open={practiceAreasOpen}
               toggle={togglePracticeAreas}
-              items={practiceAreas.map(({ title, href }) => ({ title, href }))}
+              items={practiceAreas}
             />
 
             <MobileLink href="/team" label="Our Attorneys" pathname={pathname} />
@@ -229,26 +210,7 @@ export function Header() {
               title="Locations"
               open={locationsOpen}
               toggle={toggleLocations}
-              items={[
-                { title: "View All Locations", href: "/locations" },
-                ...[
-                  "California",
-                  "Texas",
-                  "Florida",
-                  "New York",
-                  "Illinois",
-                  "Pennsylvania",
-                  "Ohio",
-                  "Georgia",
-                  "North Carolina",
-                  "Michigan",
-                  "New Jersey",
-                  "Virginia",
-                ].map((state) => ({
-                  title: state,
-                  href: `/locations/states/${state.toLowerCase().replace(/\s+/g, "-")}`,
-                })),
-              ]}
+              items={states.map(({ title, href }) => ({ title, href }))}
             />
 
             <MobileLink href="/nationwide-coverage" label="Nationwide Coverage" pathname={pathname} />
@@ -302,7 +264,7 @@ function MobileDropdown({
         <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <div className="pl-4 mt-2 space-y-2">
+        <div className="pl-4 mt-2 space-y-2 max-h-60 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-yellow-600 scrollbar-track-transparent">
           {items.map((item) => (
             <Link
               key={item.title}
@@ -315,6 +277,49 @@ function MobileDropdown({
         </div>
       )}
     </div>
+  );
+  
+}
+
+function DesktopDropdown({
+  viewAllLinks,
+  items,
+  type
+}: {
+  viewAllLinks: string
+  items: { title: string; href: string }[]
+  type: "practice" | "location"
+}) {
+  return (
+    <div className="p-4 w-full sm:w-[400px] md:w-[500px] lg:w-[600px] bg-white rounded-lg shadow-md">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        {type === "location" ? items.map((state) => (
+        <Link
+          key={state.title}
+          href={state.href}
+          className="block truncate rounded-md px-3 py-1.5 text-sm text-gray-800 hover:bg-yellow-50 hover:text-yellow-700 transition"
+        >
+          {state.title}
+        </Link>
+      )) : items.map((item) => (
+        <Link
+          key={item.title}
+          href={item.href}
+          className="block truncate rounded-md px-3 py-1.5 text-sm text-gray-800 hover:bg-yellow-50 hover:text-yellow-700 transition"
+        >
+          {item.title}
+        </Link>
+      ))}
+    </div>
+    <div className="mt-3 text-right">
+      <Link
+        href={viewAllLinks}
+        className="text-sm font-medium text-yellow-700 hover:underline transition"
+      >
+        View All →
+      </Link>
+    </div>
+  </div>
   )
 }
 

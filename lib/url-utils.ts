@@ -1,7 +1,7 @@
 /**
  * Utility functions for URL handling
  */
-import { allPracticeAreas } from './practice-areas'
+import { allPracticeAreas } from "./practice-areas"
 
 /**
  * Safely generates a URL for a city page
@@ -47,9 +47,9 @@ export function getCityServiceUrl(citySlug: string, serviceSlug: string): string
 
 export function isValidService(serviceSlug: string): boolean {
   // Extract slugs from allPracticeAreas and format them properly
-  const validServices = allPracticeAreas.map(area => {
+  const validServices = allPracticeAreas.map((area) => {
     // Extract the last part of the slug path which is the actual service slug
-    const slug = area.slug.split('/').pop() || ''
+    const slug = area.slug.split("/").pop() || ""
     return slug
   })
 
@@ -66,4 +66,11 @@ export function getServiceNameFromSlug(slug: string): string {
     .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ")
+}
+
+export function unslugifyAndUCWords(slug: string): string {
+  if (!slug) return ""
+  const words = slug.split("-")
+  const ucWords = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+  return ucWords.join(" ")
 }

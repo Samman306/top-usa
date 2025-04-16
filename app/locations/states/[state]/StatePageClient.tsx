@@ -1,32 +1,78 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import { statesList, getStateBySlug, getTopCitiesByState } from "@/lib/states-data"
+import { getStateBySlug } from "@/lib/states-data"
 import { notFound } from "next/navigation"
 import { ContactUsButton } from "@/components/contact-us-button"
 import { ClientShutterstockImage } from "@/components/client-shutterstock-image"
+import { unslugifyAndUCWords } from "@/lib/url-utils"
 
 type Props = {
   params: { state: string }
 }
 
+type Location = {
+  name: string
+  slug: string
+  state_name?: string
+  state_code?: string
+  county_name?: string
+  zipCode?: string
+  population?: string
+}
+
 export default function StatePageClient({ params }: Props) {
   const state = getStateBySlug(params.state)
+  const stateName = unslugifyAndUCWords(params.state)
 
   if (!state) {
     notFound()
   }
 
-  const cities = getTopCitiesByState(state.abbreviation).map((city) => ({
-    name: city.name,
-    slug: city.slug,
-  }))
+  const [locations, setLocations] = useState<Location[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const states = statesList.map((state) => ({
-    name: state.name,
-    slug: state.slug,
-  }))
+  useEffect(() => {
+    const fetchLocations = async () => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        // Fetch cities by state from the API
+        const response = await fetch(`/api/google-spreadsheet?sheetName=Keypoints&stateName=${stateName}`)
+        if (!response.ok) {
+          throw new Error(`Failed to fetch locations: ${response.status} ${response.statusText}`)
+        }
+        const data = await response.json()
+
+        if (data.success && Array.isArray(data.data)) {
+          // Transform the data to match our Location type
+          const transformedLocations = data.data.map((item: any) => ({
+            name: item.city || "Unknown Location",
+            slug: item.slug || item.city?.toLowerCase().replace(/\s+/g, "-") || "unknown",
+            state_name: item.state_name || item.state || "Unknown State",
+            state_code: item.state_code || "",
+            county_name: item.county_name || "Unknown County",
+            population: item.population || "0",
+            zipCode: item.zips || "",
+          })) as Location[]
+
+          setLocations(transformedLocations)
+        } else {
+          setError("No locations found for this state.")
+        }
+      } catch (error: any) {
+        console.error("Error fetching locations:", error)
+        setError(`Failed to load locations: ${error.message}`)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchLocations()
+  }, [stateName])
 
   const practiceAreas = [
     "Personal Injury",
@@ -64,7 +110,7 @@ export default function StatePageClient({ params }: Props) {
 
       <section className="py-12 md:py-16 bg-gradient-to-b from-black to-gray-900 text-white">
         <div className="container">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
+          <div className="grid md:grid-cols-2 gap-8 items-center mb-8">
             <div className="relative h-[400px] rounded-lg overflow-hidden shadow-lg border border-gray-700">
               <ClientShutterstockImage
                 query="state"
@@ -95,21 +141,14 @@ export default function StatePageClient({ params }: Props) {
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <section className="py-12 md:py-16 bg-black text-white">
-        <div className="container">
-          <h2 className="text-3xl font-bold mb-8 text-center">Our {state.name} Locations</h2>
-          <p className="text-center text-gray-300 max-w-3xl mx-auto mb-8">
-            TOP USA LAW serves clients in these major cities throughout {state.name}, as well as surrounding
-            communities.
-          </p>
-
+          <h2 className="text-3xl font-bold mb-8 text-center">Major Cities We Serve</h2>
+          {isLoading && <p className="text-center">Loading locations...</p>}
+          {error && <p className="text-center text-red-500">{error}</p>}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {cities.map((city) => (
+            {locations.map((city) => (
               <Link
-                key={city.name}
+                key={city.slug}
                 href={`/locations/cities/${city.slug}`}
                 className="block p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors border border-gray-700 hover:border-yellow-500/50 text-center"
               >
@@ -123,9 +162,9 @@ export default function StatePageClient({ params }: Props) {
         </div>
       </section>
 
-      <section className="py-12 md:py-16 bg-gray-900 text-white">
+      <section className="py-12 md:py-16 bg-black text-white">
         <div className="container">
-          <h2 className="text-3xl font-bold mb-8 text-center text-white">Legal Services Available in {state.name}</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">Legal Services Available in {state.name}</h2>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {practiceAreas.map((area, index) => (
@@ -157,7 +196,12 @@ export default function StatePageClient({ params }: Props) {
             Our {state.name} attorneys are ready to help with your legal needs. Contact us today to schedule a free
             consultation at any of our locations.
           </p>
-          <ContactUsButton variant="secondary" />
+          <Link
+            href="/contact"
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-bold bg-black hover:bg-gray-900 text-white border border-black h-11 px-8 py-2"
+          >
+            Contact Us Today <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
         </div>
       </section>
     </>

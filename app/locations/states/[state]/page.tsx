@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { getStateBySlug, statesList } from "@/lib/states-data"
 import { notFound } from "next/navigation"
 import StatePageClient from "./StatePageClient"
+import { unslugifyAndUCWords } from "@/lib/url-utils"
 
 type Props = {
   params: { state: string }
@@ -9,6 +10,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const state = getStateBySlug(params.state)
+  const stateName = unslugifyAndUCWords(params.state)
 
   if (!state) {
     return {
@@ -17,8 +19,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `Legal Services in ${state.name} | TOP USA LAW`,
-    description: `TOP USA LAW provides expert legal services throughout ${state.name}. Our experienced attorneys serve all major cities and communities across the state.`,
+    title: `Legal Services in ${stateName} | TOP USA LAW`,
+    description: `TOP USA LAW provides expert legal services throughout ${stateName}. Our experienced attorneys serve all major cities and communities across the state.`,
   }
 }
 
