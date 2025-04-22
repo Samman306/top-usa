@@ -76,14 +76,11 @@ export function createGoogleSheetsService() {
 
         if (!res.ok) {
           const errorData = await res.json()
-          console.error("Failed to append rows:", errorData)
           throw new Error("Failed to append to Google Sheet")
         }
 
-        console.log("Successfully appended rows")
         return await res.json()
       } catch (error) {
-        console.error(`Error appending to Google Sheet "${sheetName}":`, error)
         throw error
       }
     },
@@ -91,7 +88,6 @@ export function createGoogleSheetsService() {
     // GET: Fetch data from a sheet
     fetchSheet: async (sheetName: string, stateName?: string) => {
       try {
-        console.log(`Attempting to get access token for Google Sheets API...`)
         const accessToken = await getAccessToken()
 
         // First, get list of all available sheets to help with debugging and error handling
@@ -105,7 +101,6 @@ export function createGoogleSheetsService() {
           if (sheetsListRes.ok) {
             const sheetsData = (await sheetsListRes.json()) as any
             availableSheets = (sheetsData.sheets || []).map((s: any) => s.properties?.title).filter(Boolean)
-            console.log(`Available sheets in spreadsheet: ${availableSheets.join(", ")}`)
           }
         } catch (error) {
           console.warn(`Could not list available sheets: ${error}`)
@@ -130,59 +125,27 @@ export function createGoogleSheetsService() {
         let range = `${sheetName}!A1:D1000000` // Using only columns A-D instead of A-Z
         let url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}`
 
-        if (stateName) {
-          range = `${sheetName}!A1:Z1000000`
-          url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}`
-        }
-
-        console.log(`Fetching data (columns A-D) from URL: ${url}`)
-
         const res = await fetch(url, {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
-
-        if (!res.ok) {
-          console.error(`HTTP error fetching sheet: ${res.status} ${res.statusText}`)
-
-          // If the sheet doesn't exist, try to suggest a valid sheet
-          if (res.status === 400 && availableSheets.length > 0) {
-            console.log(
-              `Sheet "${sheetName}" could not be accessed. Available sheets are: ${availableSheets.join(", ")}`,
-            )
-            throw new Error(`Sheet "${sheetName}" does not exist. Available sheets: ${availableSheets.join(", ")}`)
-          }
-        }
-
         const data = await res.json()
-        console.log(`Raw API response:`, JSON.stringify(data).substring(0, 200) + "...")
-
         if ((data as any).error) {
-          console.error("Google Sheets API error:", (data as any).error)
           throw new Error(`Google Sheets API error: ${(data as any).error.message}`)
         }
 
         const rows = (data as any).values || []
         if (rows.length === 0) {
-          console.warn(`No data found in sheet "${sheetName}".`)
           return []
         }
-
-        console.log(`Found ${rows.length} rows (including header) in sheet "${sheetName}"`)
-
         const headers = rows[0]
-        console.log(`Headers in ${sheetName}: ${headers.join(", ")}`)
-
         const result = rows.slice(1).map((row: string[]) => {
           return headers.reduce((acc: any, header: string, i: number) => {
             acc[header] = row[i] ?? ""
             return acc
           }, {})
         })
-
-        console.log(`Successfully processed ${result.length} data rows from "${sheetName}"`)
         return result
       } catch (error) {
-        console.error(`Error fetching from Google Sheet "${sheetName}":`, error)
         throw error
       }
     },
@@ -190,18 +153,10 @@ export function createGoogleSheetsService() {
     // GET: Fetch rows from a sheet by city name
     getRowsByCityName: async (sheetName: string, cityName: string) => {
       try {
-        console.log(`Fetching rows from "${sheetName}" where City is "${cityName}"...`)
-
-        // First fetch all data from the sheet
         const allRows = await service.fetchSheet(sheetName)
-
-        // Find rows where City matches the cityName
         const filteredRows = allRows.filter((row: any) => row.City === cityName)
-
-        console.log(`Found ${filteredRows.length} rows in "${sheetName}" where City is "${cityName}"`)
         return filteredRows
       } catch (error) {
-        console.error(`Error fetching rows where City is "${cityName}" from "${sheetName}":`, error)
         throw error
       }
     },
@@ -219,11 +174,8 @@ export async function getCitiesByState(stateCode: string): Promise<City[]> {
   try {
     const service = await createGoogleSheetsService()
     const allCities = await service.fetchSheet("Cities")
-
-    // Filter cities by state code
     return allCities.filter((city: City) => city.stateCode?.toLowerCase() === stateCode.toLowerCase())
   } catch (error) {
-    console.error(`Error fetching cities for state ${stateCode}:`, error)
     throw error
   }
 }

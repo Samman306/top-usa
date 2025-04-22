@@ -14,6 +14,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
 import { allPracticeAreas } from "@/lib/practice-areas"
+import { slugify } from "camote-utils"
 
 const states = [
   "California",
@@ -30,7 +31,7 @@ const states = [
   "Virginia",
 ].map((state) => ({
   title: state,
-  href: `/locations/states/${state.toLowerCase().replace(/\s+/g, "-")}`,
+  href: `/locations/state/${slugify(state)}`,
 }))
 
 const practiceAreas = allPracticeAreas.map((area) => ({
