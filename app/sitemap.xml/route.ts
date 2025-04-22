@@ -71,20 +71,23 @@ async function generateSitemap(): Promise<Array<{
     priority: 0.7,
   }));
 
-  // State pages - using state list
+  // State pages - using top priority states first
   const stateUrls = [
-    'alabama', 'alaska', 'arizona', 'arkansas', 'california', 'colorado',
-    'connecticut', 'delaware', 'florida', 'georgia', 'hawaii', 'idaho',
-    'illinois', 'indiana', 'iowa', 'kansas', 'kentucky', 'louisiana',
-    'maine', 'maryland', 'massachusetts', 'michigan', 'minnesota',
-    'mississippi', 'missouri', 'montana', 'nebraska', 'nevada',
-    'new-hampshire', 'new-jersey', 'new-mexico', 'new-york',
-    'north-carolina', 'north-dakota', 'ohio', 'oklahoma', 'oregon',
-    'pennsylvania', 'rhode-island', 'south-carolina', 'south-dakota',
-    'tennessee', 'texas', 'utah', 'vermont', 'virginia',
-    'washington', 'west-virginia', 'wisconsin', 'wyoming'
+    // Top priority states
+    'california', 'texas', 'florida', 'new-york', 'pennsylvania', 
+    'illinois', 'ohio', 'georgia', 'north-carolina', 'michigan',
+    'new-jersey', 'virginia', 'washington', 'arizona', 'massachusetts'
+    // Uncomment for all states if needed
+    /*
+    'alabama', 'alaska', 'arkansas', 'colorado', 'connecticut', 'delaware', 
+    'hawaii', 'idaho', 'indiana', 'iowa', 'kansas', 'kentucky', 'louisiana',
+    'maine', 'maryland', 'minnesota', 'mississippi', 'missouri', 'montana', 
+    'nebraska', 'nevada', 'new-hampshire', 'new-mexico', 'north-dakota', 
+    'oklahoma', 'oregon', 'rhode-island', 'south-carolina', 'south-dakota',
+    'tennessee', 'utah', 'vermont', 'west-virginia', 'wisconsin', 'wyoming'
+    */
   ].map(state => ({
-    url: `${baseUrl}/locations/states/${state}`,
+    url: `${baseUrl}/locations/state/${state}`, // Corrected path - singular 'state'
     lastModified: currentDate,
     changeFrequency: "monthly" as const,
     priority: 0.6,
@@ -105,28 +108,32 @@ async function generateSitemap(): Promise<Array<{
   ];
   
   const cityPages = majorCities.map(city => ({
-    url: `${baseUrl}/locations/cities/${city}`,
+    url: `${baseUrl}/locations/${city}`, // Corrected path based on actual routes
     lastModified: currentDate,
     changeFrequency: "monthly" as const,
     priority: 0.5,
   }));
 
-  // City-service pages (using SEO-friendly format)
+  // City-service pages - limited to top cities and services
   const services = [
     "personal-injury",
     "car-accidents",
-    "truck-accidents",
-    "uber-lyft-accidents",
-    "work-accidents",
-    "construction-accidents",
+    "truck-accidents"
+    // Reduced service list to minimize total URL count
+    // "uber-lyft-accidents",
+    // "work-accidents",
+    // "construction-accidents",
   ];
+  
+  // Limit to just the most important cities to reduce URL count
+  const topCities = majorCities.slice(0, 5); // Just use top 5 cities
   
   const cityServicePages = [];
   
-  for (const city of majorCities) {
+  for (const city of topCities) {
     for (const service of services) {
       cityServicePages.push({
-        url: `${baseUrl}/${city}-${service}`,
+        url: `${baseUrl}/locations/${city}/${service}`, // Corrected path format based on actual routes
         lastModified: currentDate,
         changeFrequency: "monthly" as const,
         priority: 0.7,
@@ -134,18 +141,19 @@ async function generateSitemap(): Promise<Array<{
     }
   }
 
-  // Attorney pages
+  // Attorney pages - using /team/{slug} format
   const attorneyPages = [
     "alexander-sterling",
     "victoria-chase",
     "jackson-wolf",
     "sophia-rodriguez",
-    "marcus-king",
-    "olivia-bennett",
-    "ethan-drake",
-    "isabella-chen",
+    // Reduced list to minimize URLs
+    // "marcus-king",
+    // "olivia-bennett",
+    // "ethan-drake",
+    // "isabella-chen",
   ].map((slug) => ({
-    url: `${baseUrl}/attorneys/${slug}`,
+    url: `${baseUrl}/team/${slug}`, // Corrected path based on actual routes
     lastModified: currentDate,
     changeFrequency: "monthly" as const,
     priority: 0.6,
