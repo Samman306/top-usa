@@ -128,7 +128,7 @@ export default function Footer() {
             <ul className="space-y-4">
               {[
                 { title: "Our Attorneys", href: "/team" },
-                { title: "About Us", href: "/about" },
+                { title: "About Us", href: "/about-us" },
                 { title: "Nationwide Coverage", href: "/nationwide-coverage" },
                 { title: "Contact", href: "/contact" },
               ].map((item) => (
