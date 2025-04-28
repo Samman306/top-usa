@@ -77,16 +77,20 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    console.log(`API request to /api/google-spreadsheet received`)
-
     // Get the spreadsheet ID from env
     const spreadsheetId = process.env.GOOGLE_SPREADSHEET_ID
     if (!spreadsheetId) {
-      return NextResponse.json(
-        {
+      return new Response(
+        JSON.stringify({
           error: "GOOGLE_SPREADSHEET_ID not configured",
-        },
-        { status: 500 },
+        }),
+        { 
+          status: 500,
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store, max-age=0',
+          }
+        }
       )
     }
 
@@ -103,13 +107,7 @@ export async function GET(request: NextRequest) {
       // Then try known sheets that exist in this spreadsheet
       "Locations",
       "LawyerProfiles",
-      // Fallback to common sheet names
-      "Cities",
-      "Sheet1",
-      "Data",
     ]
-
-    console.log(`Will try sheets in this order: ${sheetsToTry.join(", ")}`)
 
     // Initialize the Google Sheets service
     const sheetsService = createGoogleSheetsService()
@@ -121,46 +119,71 @@ export async function GET(request: NextRequest) {
 
     for (const sheetName of sheetsToTry) {
       try {
-        console.log(`Attempting to fetch from sheet: "${sheetName}"...`)
         let data
         if (stateName) {
           data = await sheetsService.fetchSheet(sheetName, stateName)
         } else {
           data = await sheetsService.fetchSheet(sheetName)
         }
-        console.log(`Successfully fetched ${data.length} records from "${sheetName}" sheet`)
-
         // If we got here, this sheet worked
         successData = data
         successSheetName = sheetName
         break
       } catch (error: any) {
-        console.warn(`Failed to fetch from "${sheetName}": ${error.message}`)
+        console.error(`Error fetching sheet ${sheetName}:`, error)
         lastError = error
         // Continue to the next sheet
       }
     }
-
+    
     // If we found a working sheet
     if (successData) {
-      return NextResponse.json({
-        success: true,
-        data: successData,
-        sheet: successSheetName,
-        requested: requestedSheet || null,
-      })
+      return new Response(
+        JSON.stringify({
+          success: true,
+          data: successData,
+          sheet: successSheetName,
+          requested: requestedSheet || null,
+        }),
+        { 
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store, max-age=0',
+          } 
+        }
+      )
     }
 
     // If all sheets failed
-    throw new Error(`Failed to fetch data from any sheet. Last error: ${lastError?.message}`)
+    console.error(`Failed to fetch data from any sheet. Last error: ${lastError?.message}`)
+    return new Response(
+      JSON.stringify({
+        error: `Failed to fetch data from any sheet. Last error: ${lastError?.message}`,
+        fallback: true,
+      }),
+      { 
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store, max-age=0',
+        } 
+      }
+    )
   } catch (error: any) {
     console.error("Error in Google Spreadsheet API route:", error)
-    return NextResponse.json(
-      {
+    return new Response(
+      JSON.stringify({
         error: error.message || "Failed to fetch sheet data",
         fallback: true, // Signal to client that it should use fallback data
-      },
-      { status: 500 },
+      }),
+      { 
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store, max-age=0',
+        } 
+      }
     )
   }
 }
