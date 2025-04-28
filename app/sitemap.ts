@@ -1,152 +1,110 @@
 import type { MetadataRoute } from "next"
 import { statesList, getTopCitiesByState } from "@/lib/states-data"
-import { getAllServiceSlugs } from "@/app/lib/services-data"
+import { allPracticeAreas } from "@/lib/practice-areas"
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://www.topusalaw.com"
-  const currentDate = new Date()
+// Limit the number of locations to prevent build timeouts
+const MAX_LOCATIONS = 500
 
-  // Main routes
-  const mainRoutes = [
-    "",
-    "/about",
-    "/team",
-    "/contact",
-    "/locations",
-    "/nationwide-coverage",
-    "/practice-areas",
-    "/services",
-  ].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: currentDate,
-    changeFrequency: "monthly" as const,
-    priority: route === "" ? 1.0 : 0.8,
-  }))
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://topusalaw.com"
 
-  // Practice areas
-  const practiceAreas = [
-    "personal-injury",
-    "car-accidents",
-    "truck-accidents",
-    "uber-lyft-accidents",
-    "work-accidents",
-    "construction-accidents",
-    "slip-fall-injuries",
-    "white-collar-crimes",
-    "immigration-law",
-    "class-actions",
-  ].map((area) => ({
-    url: `${baseUrl}/practice-areas/${area}`,
-    lastModified: currentDate,
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }))
-
-  // Services pages
-  const servicePages = getAllServiceSlugs().map((slug) => ({
-    url: `${baseUrl}/services/${slug}`,
-    lastModified: currentDate,
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }))
-
-  // State pages
-  const statePages = statesList.map((state) => ({
-    url: `${baseUrl}/locations/states/${state.slug}`,
-    lastModified: currentDate,
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }))
-
-  // City pages
-  let cityPages: MetadataRoute.Sitemap = []
-  statesList.forEach((state) => {
-    const cities = getTopCitiesByState(state.abbreviation)
-    const stateCityPages = cities.map((city) => ({
-      url: `${baseUrl}/locations/cities/${city.slug}`,
-      lastModified: currentDate,
+  // Static routes
+  const staticRoutes = [
+    {
+      url: `${baseUrl}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 1.0,
+    },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: new Date(),
       changeFrequency: "monthly" as const,
-      priority: 0.5,
-    }))
-    cityPages = [...cityPages, ...stateCityPages]
-  })
-
-  // City-service pages (using the SEO-friendly format)
-  const cityServicePages: MetadataRoute.Sitemap = []
-  const services = [
-    "personal-injury",
-    "car-accidents",
-    "truck-accidents",
-    "uber-lyft-accidents",
-    "work-accidents",
-    "construction-accidents",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/team`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/success-stories`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/practice-areas`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/locations`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/nationwide-coverage`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    },
   ]
 
-  // Add specific city-service pages for major cities
-  const majorCities = [
-    "los-angeles",
-    "san-francisco",
-    "new-york",
-    "chicago",
-    "houston",
-    "miami",
-    "dallas",
-    "phoenix",
-    "philadelphia",
-    "san-antonio",
-  ]
+  // Practice area routes
+  const practiceAreaRoutes = allPracticeAreas.map((area) => ({
+    url: `${baseUrl}${area.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }))
 
-  majorCities.forEach((city) => {
-    services.forEach((service) => {
-      cityServicePages.push({
-        url: `${baseUrl}/${city}-${service}`,
-        lastModified: currentDate,
+  // State routes - these are important but not too numerous
+  const stateRoutes = statesList.map((state) => ({
+    url: `${baseUrl}/locations/states/${state.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }))
+
+  // City routes - potentially many, so we'll limit them
+  const cityRoutes: MetadataRoute.Sitemap = []
+  let cityCount = 0
+
+  // Only include cities for the most important states to avoid build timeouts
+  const priorityStates = ["CA", "TX", "FL", "NY", "IL", "PA", "OH", "GA", "NC", "MI"]
+
+  for (const stateAbbr of priorityStates) {
+    if (cityCount >= MAX_LOCATIONS) break
+
+    const cities = getTopCitiesByState(stateAbbr)
+    const state = statesList.find((s) => s.abbreviation === stateAbbr)
+
+    if (!state || !cities.length) continue
+
+    for (const city of cities) {
+      if (cityCount >= MAX_LOCATIONS) break
+
+      cityRoutes.push({
+        url: `${baseUrl}/locations/cities/${state.slug}.${city.slug}`,
+        lastModified: new Date(),
         changeFrequency: "monthly" as const,
-        priority: 0.7,
+        priority: 0.6,
       })
-    })
-  })
 
-  // Example attorney pages
-  const attorneyPages = [
-    "alexander-sterling",
-    "victoria-chase",
-    "jackson-wolf",
-    "sophia-rodriguez",
-    "marcus-king",
-    "olivia-bennett",
-    "ethan-drake",
-    "isabella-chen",
-  ].map((slug) => ({
-    url: `${baseUrl}/attorneys/${slug}`,
-    lastModified: currentDate,
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }))
+      cityCount++
+    }
+  }
 
-  // Success stories
-  const successStoryPages = [
-    "contract-negotiation-success",
-    "intellectual-property-protection",
-    "favorable-settlement",
-    "business-contract-review",
-    "online-defamation-resolution",
-    "entertainment-contract-negotiation",
-  ].map((slug) => ({
-    url: `${baseUrl}/success-stories/${slug}`,
-    lastModified: currentDate,
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }))
-
-  return [
-    ...mainRoutes,
-    ...practiceAreas,
-    ...servicePages,
-    ...statePages,
-    ...cityPages,
-    ...cityServicePages,
-    ...attorneyPages,
-    ...successStoryPages,
-  ]
+  // Combine all routes
+  return [...staticRoutes, ...practiceAreaRoutes, ...stateRoutes, ...cityRoutes]
 }
