@@ -90,10 +90,10 @@ export function Header() {
                 Home
               </Link>
               <Link
-                href="/about-us"
+                href="/about"
                 className={cn(
                   "py-2 px-1",
-                  pathname === "/about-us" ? "text-yellow-500 font-medium" : "hover:text-yellow-600",
+                  pathname === "/about" ? "text-yellow-500 font-medium" : "hover:text-yellow-600",
                 )}
               >
                 About
@@ -194,7 +194,7 @@ export function Header() {
         <div className="lg:hidden bg-gradient-to-b from-black to-gray-900 border-t border-yellow-500/10">
           <div className="container py-4 space-y-4">
             <MobileLink href="/" label="Home" pathname={pathname} />
-            <MobileLink href="/about-us" label="About" pathname={pathname} />
+            <MobileLink href="/about" label="About" pathname={pathname} />
 
             {/* Practice Areas Dropdown */}
             <MobileDropdown

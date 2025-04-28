@@ -44,6 +44,20 @@ async function getAccessToken() {
   return data.access_token
 }
 
+// Add a timeout to the fetch requests to prevent hanging
+async function fetchWithTimeout(url, options, timeout = 10000) {
+  const controller = new AbortController()
+  const id = setTimeout(() => controller.abort(), timeout)
+
+  const response = await fetch(url, {
+    ...options,
+    signal: controller.signal,
+  })
+
+  clearTimeout(id)
+  return response
+}
+
 // Function to create Google Sheets service (focused on GET and POST)
 export function createGoogleSheetsService() {
   const spreadsheetId = getEnvVar("GOOGLE_SPREADSHEET_ID")
@@ -94,9 +108,11 @@ export function createGoogleSheetsService() {
         let availableSheets: string[] = []
         try {
           const sheetsListUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}`
-          const sheetsListRes = await fetch(sheetsListUrl, {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          })
+          const sheetsListRes = await fetchWithTimeout(
+            sheetsListUrl,
+            { headers: { Authorization: `Bearer ${accessToken}` } },
+            5000, // 5 second timeout
+          )
 
           if (sheetsListRes.ok) {
             const sheetsData = (await sheetsListRes.json()) as any
@@ -104,6 +120,7 @@ export function createGoogleSheetsService() {
           }
         } catch (error) {
           console.warn(`Could not list available sheets: ${error}`)
+          // Continue with the process even if this fails
         }
 
         // Check if the requested sheet exists in the spreadsheet
@@ -122,8 +139,8 @@ export function createGoogleSheetsService() {
 
         // Use standard Google Sheets API format with proper encoding
         // Fetch only columns A-D with no row limit
-        let range = `${sheetName}!A1:D1000000` // Using only columns A-D instead of A-Z
-        let url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}`
+        const range = `${sheetName}!A1:D1000000` // Using only columns A-D instead of A-Z
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}`
 
         const res = await fetch(url, {
           headers: { Authorization: `Bearer ${accessToken}` },

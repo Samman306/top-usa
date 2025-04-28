@@ -1,0 +1,8 @@
+# Ignore files not needed for build
+.git
+.github
+README.md
+.env.local
+.env.development
+node_modules
+.next
