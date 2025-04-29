@@ -1,5 +1,4 @@
 import type { MetadataRoute } from "next"
-import { allStates } from "@/lib/allstates"
 
 // Simple function to get the last modified date
 const getLastModified = () => new Date()
@@ -13,55 +12,55 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: `${baseUrl}`,
       lastModified: getLastModified(),
-      changeFrequency: "weekly",
+      changeFrequency: "weekly" as const,
       priority: 1.0,
     },
     {
       url: `${baseUrl}/about-us`,
       lastModified: getLastModified(),
-      changeFrequency: "monthly",
+      changeFrequency: "monthly" as const,
       priority: 0.8,
     },
     {
       url: `${baseUrl}/team`,
       lastModified: getLastModified(),
-      changeFrequency: "monthly",
+      changeFrequency: "monthly" as const,
       priority: 0.8,
     },
     {
       url: `${baseUrl}/practice-areas`,
       lastModified: getLastModified(),
-      changeFrequency: "monthly",
+      changeFrequency: "monthly" as const,
       priority: 0.9,
     },
     {
       url: `${baseUrl}/services`,
       lastModified: getLastModified(),
-      changeFrequency: "monthly",
+      changeFrequency: "monthly" as const,
       priority: 0.9,
     },
     {
       url: `${baseUrl}/locations`,
       lastModified: getLastModified(),
-      changeFrequency: "weekly",
+      changeFrequency: "weekly" as const,
       priority: 0.9,
     },
     {
       url: `${baseUrl}/contact`,
       lastModified: getLastModified(),
-      changeFrequency: "yearly",
+      changeFrequency: "yearly" as const,
       priority: 0.7,
     },
     {
       url: `${baseUrl}/success-stories`,
       lastModified: getLastModified(),
-      changeFrequency: "monthly",
+      changeFrequency: "monthly" as const,
       priority: 0.8,
     },
     {
       url: `${baseUrl}/nationwide-coverage`,
       lastModified: getLastModified(),
-      changeFrequency: "monthly",
+      changeFrequency: "monthly" as const,
       priority: 0.7,
     },
   ]
@@ -81,7 +80,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ].map((area) => ({
     url: `${baseUrl}/practice-areas/${area}`,
     lastModified: getLastModified(),
-    changeFrequency: "monthly",
+    changeFrequency: "monthly" as const,
     priority: 0.8,
   }))
 
@@ -89,15 +88,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const services = ["personal-injury", "car-accidents", "truck-accidents", "uber-lyft-accidents"].map((service) => ({
     url: `${baseUrl}/services/${service}`,
     lastModified: getLastModified(),
-    changeFrequency: "monthly",
+    changeFrequency: "monthly" as const,
     priority: 0.8,
   }))
 
-  // State pages - limit to a reasonable number to avoid build issues
-  const statePages = allStates.slice(0, 10).map((state) => ({
-    url: `${baseUrl}/locations/state/${state.code.toLowerCase()}`,
+  // State pages - hardcoded to avoid any issues with data fetching
+  const statePages = ["california", "new-york", "texas", "florida", "illinois"].map((state) => ({
+    url: `${baseUrl}/locations/state/${state}`,
     lastModified: getLastModified(),
-    changeFrequency: "monthly",
+    changeFrequency: "monthly" as const,
     priority: 0.7,
   }))
 
