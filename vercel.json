@@ -1,9 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "pnpm run build",
-  "outputDirectory": ".next",
-  "cleanUrls": true,
-  "github": {
-    "silent": true
-  }
+  "buildCommand": "next build",
+  "outputDirectory": "out",
+  "framework": null,
+  "cleanUrls": true
 }

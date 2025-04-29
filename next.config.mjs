@@ -1,33 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Use the most compatible output format for Vercel
-  output: 'standalone',
-  
-  // Disable features that might cause deployment issues
-  productionBrowserSourceMaps: false,
-  
+  // Use the most basic configuration possible
+  output: 'export', // Generate static HTML files
+  distDir: 'out',
+  images: {
+    unoptimized: true, // Disable image optimization
+  },
+  // Disable all features that might cause issues
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
-  
-  // Simplify image configuration
-  images: {
-    unoptimized: true,
-    domains: ['placeholder.co'],
-  },
-  
-  // Optimize build size
   swcMinify: true,
-  
-  // Disable unnecessary features
-  reactStrictMode: true,
+  reactStrictMode: false,
   poweredByHeader: false,
-  
-  // Remove all experimental features
-  experimental: {},
 }
 
 export default nextConfig

@@ -1,47 +1,54 @@
 import type { Metadata } from "next"
-import { Suspense } from "react"
-import LocationsClient from "./LocationsClient"
-import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Our Locations | Nationwide Legal Services | TOP USA LAW",
+  title: "Our Locations | TOP USA LAW",
   description:
-    "TOP USA LAW provides expert legal services across all 50 states. Find an experienced attorney in your state and city today.",
+    "Find TOP USA LAW offices and legal services near you. We serve clients nationwide with local expertise.",
 }
 
 export default function LocationsPage() {
   return (
-    <main className="bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-8">
-        <Suspense fallback={<LocationsLoading />}>
-          <LocationsClient />
-        </Suspense>
-      </div>
-      <section className="py-12 md:py-16 bg-gray-800 text-white">
-        <div className="container text-center">
-          <h2 className="text-3xl font-bold mb-4">Can't Find Your Location?</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto mb-8">
-            Even if your specific city isn't listed, we can still help. Our attorneys are licensed to practice
-            throughout each state and can provide remote consultations.
-          </p>
-          <Button size="lg" className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold" asChild>
-            <Link href="/contact">
-              Contact Us Today <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
-      </section>
-    </main>
-  )
-}
+    <div className="container mx-auto px-4 py-12">
+      <h1 className="text-4xl font-bold mb-8">Our Locations</h1>
 
-function LocationsLoading() {
-  return (
-    <div className="w-full flex flex-col items-center py-12">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-400 mb-4"></div>
-      <p className="text-white">Loading locations...</p>
+      <div className="mb-8">
+        <p className="text-lg mb-4">
+          TOP USA LAW provides expert legal representation across the United States. Find an office near you or contact
+          us for a consultation.
+        </p>
+      </div>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[
+          { name: "New York", slug: "new-york" },
+          { name: "Los Angeles", slug: "los-angeles" },
+          { name: "Chicago", slug: "chicago" },
+          { name: "Houston", slug: "houston" },
+          { name: "Phoenix", slug: "phoenix" },
+          { name: "Philadelphia", slug: "philadelphia" },
+        ].map((location) => (
+          <div key={location.slug} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+            <h2 className="text-2xl font-bold mb-2">{location.name}</h2>
+            <p className="text-gray-600 mb-4">Expert legal services in {location.name} and surrounding areas.</p>
+            <Link
+              href={`/locations/${location.slug}`}
+              className="inline-flex items-center text-yellow-600 font-medium hover:underline"
+            >
+              View Details
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 ml-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
