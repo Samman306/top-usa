@@ -1,7 +1,9 @@
 "use client"
 
 import { useEffect } from "react"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { RefreshCw, Home } from "lucide-react"
 
 export default function Error({
   error,
@@ -10,31 +12,40 @@ export default function Error({
   error: Error & { digest?: string }
   reset: () => void
 }) {
+  const router = useRouter()
+
   useEffect(() => {
     // Log the error to an error reporting service
     console.error(error)
   }, [error])
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 text-center">
-        <div>
-          <h1 className="mt-6 text-3xl font-extrabold text-gray-900">Something went wrong</h1>
-          <p className="mt-2 text-sm text-gray-600">We're sorry, an unexpected error has occurred.</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+      <div className="container max-w-3xl text-center py-16">
+        <h1 className="text-6xl font-bold mb-6 text-yellow-500">Oops!</h1>
+        <h2 className="text-3xl font-bold mb-4">Something went wrong</h2>
+        <p className="text-xl text-gray-300 mb-8">
+          We apologize for the inconvenience. Our team has been notified of this issue.
+        </p>
+
+        <div className="bg-gray-800 p-8 rounded-lg mb-8 max-w-xl mx-auto">
+          <h3 className="text-xl font-bold mb-4">Error Details</h3>
+          <p className="mb-4 text-gray-300">{error.message || "An unexpected error occurred"}</p>
+          <p className="text-sm text-gray-400">Error ID: {error.digest || "unknown"}</p>
         </div>
-        <div className="mt-8 flex justify-center space-x-4">
-          <button
-            onClick={() => reset()}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold" onClick={reset}>
+            <RefreshCw className="mr-2 h-5 w-5" /> Try Again
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
+            className="border-yellow-500 text-yellow-500 hover:bg-yellow-500/10"
+            onClick={() => router.push("/")}
           >
-            Try again
-          </button>
-          <Link
-            href="/"
-            className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Return to Home
-          </Link>
+            <Home className="mr-2 h-5 w-5" /> Return Home
+          </Button>
         </div>
       </div>
     </div>

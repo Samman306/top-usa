@@ -829,23 +829,63 @@ export default function LocationsClient() {
     const fetchCities = async () => {
       try {
         setIsLoading(true)
+        try {
+          // Add limit=1000 to ensure we get all cities (or the maximum allowed)
+          const locationsResponse = await fetch("/api/cities?limit=1000")
+
+          if (locationsResponse.ok) {
+            const locationsData = await locationsResponse.json()
+
+            if (Array.isArray(locationsData) && locationsData.length > 0) {
+              // Transform the data to match our Location type
+              const transformedLocations = locationsData.map((item: any) => ({
+                name: item.city || item.name || "Unknown Location",
+                slug: item.slug || item.city?.toLowerCase().replace(/\s+/g, "-") || "unknown",
+                state_name: item.state || "Unknown State",
+                state_code: item.stateCode || "",
+                county_name: item.county || "Unknown County",
+                population: item.population || "0",
+              }))
+
+              setLocations(transformedLocations)
+              setFilteredLocations(transformedLocations)
+              setTotalLocations(transformedLocations.length)
+              setTotalPages(Math.ceil(transformedLocations.length / itemsPerPage))
+
+              // Extract states from fetched locations
+              const stateNames = Array.from(new Set(transformedLocations.map((loc: Location) => loc.state_name)))
+                .filter(Boolean)
+                .sort() as string[]
+              setStates(stateNames)
+
+              setIsLoading(false)
+              return // Exit early if we successfully got data
+            }
+          }
+        } catch (apiError) {
+          console.log("Could not fetch from built-in API, trying spreadsheet directly")
+        }
 
         // Fallback to direct Google Spreadsheet API
         console.log("Fetching location data from Google Spreadsheet API...")
         // Try with different common sheet names
+        const sheetNames = ["Cities", "Locations", "cities", "locations", "Sheet1"]
         let result = null
 
-        try {
-          const response = await fetch(`/api/google-spreadsheet?sheet=Locations`)
-          if (response.ok) {
-            const data = await response.json()
-            if (data.success && Array.isArray(data.data) && data.data.length > 0) {
-              console.log(`Successfully fetched data from sheet: Locations`)
-              result = data
+        for (const sheet of sheetNames) {
+          try {
+            const response = await fetch(`/api/google-spreadsheet?sheet=${sheet}`)
+            if (response.ok) {
+              const data = await response.json()
+              if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+                console.log(`Successfully fetched data from sheet: ${sheet}`)
+                result = data
+                break
+              }
             }
+          } catch (err) {
+            console.log(`Failed to fetch from sheet ${sheet}:`, err)
           }
-        } catch (err) {
-          console.log(`Failed to fetch from sheet Locations:`, err)
         }
 
         // Process data if we found it from spreadsheet

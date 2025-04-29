@@ -1,74 +1,73 @@
-// Use placeholder.svg for all images to reduce deployment size
 export const imagePaths = {
   // Hero images
-  heroTeam: "https://placeholder.co/800x400?text=Law+Firm+Team",
-  heroOffice: "https://placeholder.co/800x400?text=Law+Office",
+  heroTeam: "/images/law-firm-team.jpg",
+  heroOffice: "/images/law-office.jpg",
 
   // Attorney images
   attorneys: {
-    johnDoe: "https://placeholder.co/400x400?text=John+Doe",
-    janeDoe: "https://placeholder.co/400x400?text=Jane+Doe",
-    michaelSmith: "https://placeholder.co/400x400?text=Michael+Smith",
-    sarahJohnson: "https://placeholder.co/400x400?text=Sarah+Johnson",
+    johnDoe: "/images/attorneys/john-doe.jpg",
+    janeDoe: "/images/attorneys/jane-doe.jpg",
+    michaelSmith: "/images/attorneys/michael-smith.jpg",
+    sarahJohnson: "/images/attorneys/sarah-johnson.jpg",
   },
 
   // Practice area images
   practiceAreas: {
-    businessLaw: "https://placeholder.co/400x300?text=Business+Law",
-    familyLaw: "https://placeholder.co/400x300?text=Family+Law",
-    civilLitigation: "https://placeholder.co/400x300?text=Civil+Litigation",
-    estatePlanning: "https://placeholder.co/400x300?text=Estate+Planning",
-    realEstateLaw: "https://placeholder.co/400x300?text=Real+Estate+Law",
-    personalInjury: "https://placeholder.co/400x300?text=Personal+Injury",
+    businessLaw: "/images/practice-areas/business-law.jpg",
+    familyLaw: "/images/practice-areas/family-law.jpg",
+    civilLitigation: "/images/practice-areas/civil-litigation.jpg",
+    estatePlanning: "/images/practice-areas/estate-planning.jpg",
+    realEstateLaw: "/images/practice-areas/real-estate-law.jpg",
+    personalInjury: "/images/practice-areas/personal-injury.jpg",
   },
 
   // Office locations
   offices: {
-    mainOffice: "https://placeholder.co/400x300?text=Main+Office",
-    downtownOffice: "https://placeholder.co/400x300?text=Downtown+Office",
-    suburbanOffice: "https://placeholder.co/400x300?text=Suburban+Office",
+    mainOffice: "/images/offices/main-office.jpg",
+    downtownOffice: "/images/offices/downtown-office.jpg",
+    suburbanOffice: "/images/offices/suburban-office.jpg",
   },
 
   // Testimonials
   testimonials: {
-    client1: "https://placeholder.co/100x100?text=Client+1",
-    client2: "https://placeholder.co/100x100?text=Client+2",
-    client3: "https://placeholder.co/100x100?text=Client+3",
+    client1: "/images/testimonials/client1.jpg",
+    client2: "/images/testimonials/client2.jpg",
+    client3: "/images/testimonials/client3.jpg",
   },
 
   // Location images
   locations: {
     // State images
     states: {
-      default: "https://placeholder.co/800x400?text=Default+State",
-      california: "https://placeholder.co/800x400?text=California",
-      newyork: "https://placeholder.co/800x400?text=New+York",
-      texas: "https://placeholder.co/800x400?text=Texas",
-      florida: "https://placeholder.co/800x400?text=Florida",
-      illinois: "https://placeholder.co/800x400?text=Illinois",
+      default: "/images/locations/states/default-state.jpg",
+      california: "/images/locations/states/california.jpg",
+      newyork: "/images/locations/states/new-york.jpg",
+      texas: "/images/locations/states/texas.jpg",
+      florida: "/images/locations/states/florida.jpg",
+      illinois: "/images/locations/states/illinois.jpg",
     },
     // City images
     cities: {
-      default: "https://placeholder.co/800x400?text=Default+City",
-      newyork: "https://placeholder.co/800x400?text=New+York+City",
-      losangeles: "https://placeholder.co/800x400?text=Los+Angeles",
-      chicago: "https://placeholder.co/800x400?text=Chicago",
-      houston: "https://placeholder.co/800x400?text=Houston",
-      phoenix: "https://placeholder.co/800x400?text=Phoenix",
-      philadelphia: "https://placeholder.co/800x400?text=Philadelphia",
-      sanantonio: "https://placeholder.co/800x400?text=San+Antonio",
-      sandiego: "https://placeholder.co/800x400?text=San+Diego",
-      dallas: "https://placeholder.co/800x400?text=Dallas",
-      sanjose: "https://placeholder.co/800x400?text=San+Jose",
+      default: "/images/locations/cities/default-city.jpg",
+      newyork: "/images/locations/cities/new-york.jpg",
+      losangeles: "/images/locations/cities/los-angeles.jpg",
+      chicago: "/images/locations/cities/chicago.jpg",
+      houston: "/images/locations/cities/houston.jpg",
+      phoenix: "/images/locations/cities/phoenix.jpg",
+      philadelphia: "/images/locations/cities/philadelphia.jpg",
+      sanantonio: "/images/locations/cities/san-antonio.jpg",
+      sandiego: "/images/locations/cities/san-diego.jpg",
+      dallas: "/images/locations/cities/dallas.jpg",
+      sanjose: "/images/locations/cities/san-jose.jpg",
     },
     // Maps
     maps: {
-      default: "https://placeholder.co/800x400?text=Default+Map",
+      default: "/images/locations/maps/default-map.jpg",
     },
   },
 
   // Miscellaneous
-  logo: "https://placeholder.co/200x50?text=Meridian+Law",
-  ogImage: "https://placeholder.co/1200x630?text=Meridian+Law",
+  logo: "/images/meridian-law-logo.jpg",
+  ogImage: "/images/meridian-law-og.jpg",
   favicon: "/favicon.ico",
 }

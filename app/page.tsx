@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, Shield, Award, Car, Truck, HardHat, Briefcase, Scale } from "lucide-react"
+import { ArrowRight, Shield, Award, Car, Truck, Building, HardHat, Briefcase, Scale, Users } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ClientShutterstockImage } from "@/components/client-shutterstock-image"
 
 export const metadata: Metadata = {
   title: "TOP USA LAW | Expert Legal Representation",
@@ -13,11 +15,16 @@ export default function Home() {
     <>
       <section className="relative py-24 md:py-32 bg-gradient-to-r from-gray-900 to-black overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-10">
-          {/* Placeholder for image */}
-          <div className="w-full h-full bg-gray-800"></div>
+          <ClientShutterstockImage
+            query="law office"
+            alt="Professional law office"
+            fill
+            className="object-cover"
+            priority
+          />
         </div>
 
-        <div className="container relative z-20 mx-auto px-4">
+        <div className="container relative z-20">
           <div className="grid gap-8 md:grid-cols-2 md:gap-12 items-center">
             <div className="space-y-6">
               <div className="inline-flex items-center bg-yellow-500/10 px-3 py-1 rounded-full text-yellow-500 text-sm font-medium mb-2">
@@ -63,8 +70,13 @@ export default function Home() {
             </div>
 
             <div className="relative h-[500px] rounded-lg overflow-hidden shadow-2xl border-2 border-yellow-500/20">
-              {/* Placeholder for image */}
-              <div className="w-full h-full bg-gray-700"></div>
+              <ClientShutterstockImage
+                query="professional law office with clients"
+                alt="Professional law office"
+                fill
+                className="object-cover"
+                priority
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-6">
                 <div className="flex items-center mb-3">
@@ -98,7 +110,7 @@ export default function Home() {
       </section>
 
       <section className="py-16 md:py-24 bg-gradient-to-b from-black to-gray-900">
-        <div className="container mx-auto px-4">
+        <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-extrabold mb-6 text-white">
               OUR <span className="text-yellow-500">LEGAL SERVICES</span>
@@ -154,21 +166,57 @@ export default function Home() {
                   "Specialized representation for workers injured on construction sites and in building-related accidents.",
                 link: "/practice-areas/construction-accidents",
               },
+              {
+                title: "Slip and Fall Accidents",
+                icon: (
+                  <Building className="h-10 w-10 text-yellow-500" aria-label="Slip and Fall Accidents services icon" />
+                ),
+                description:
+                  "Holding property owners accountable for dangerous conditions that cause slip, trip, and fall injuries.",
+                link: "/practice-areas/slip-fall-injuries",
+              },
+              {
+                title: "White Collar Crimes",
+                icon: (
+                  <Briefcase className="h-10 w-10 text-yellow-500" aria-label="White Collar Crimes services icon" />
+                ),
+                description:
+                  "Strategic defense against fraud, embezzlement, and other financial and business-related criminal charges.",
+                link: "/practice-areas/white-collar-crimes",
+              },
+              {
+                title: "Immigration Law",
+                icon: <Scale className="h-10 w-10 text-yellow-500" aria-label="Immigration Law services icon" />,
+                description:
+                  "Comprehensive immigration services including visas, green cards, citizenship, and deportation defense.",
+                link: "/practice-areas/immigration-law",
+              },
+              {
+                title: "Class Actions",
+                icon: <Users className="h-10 w-10 text-yellow-500" aria-label="Class Actions services icon" />,
+                description:
+                  "Representing groups of individuals harmed by the same corporate misconduct or defective products.",
+                link: "/practice-areas/class-actions",
+              },
             ].map((area, index) => (
-              <div
+              <Card
                 key={index}
-                className="group transition-all hover:shadow-md bg-gray-800 border border-gray-700 hover:border-yellow-500/50 rounded-lg p-6"
+                className="group transition-all hover:shadow-md bg-gray-800 border-gray-700 hover:border-yellow-500/50"
               >
-                <div className="mb-4">{area.icon}</div>
-                <h3 className="text-white text-2xl font-bold mb-2">{area.title}</h3>
-                <p className="text-gray-400 mb-4">{area.description}</p>
-                <Link
-                  href={area.link}
-                  className="text-yellow-500 font-medium group-hover:underline inline-flex items-center"
-                >
-                  Learn More <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
-              </div>
+                <CardHeader>
+                  <div className="mb-2">{area.icon}</div>
+                  <CardTitle className="text-white text-2xl">{area.title}</CardTitle>
+                  <CardDescription className="text-gray-400">{area.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Link
+                    href={area.link}
+                    className="text-yellow-500 font-medium group-hover:underline inline-flex items-center"
+                  >
+                    Learn More <ArrowRight className="ml-1 h-4 w-4" />
+                  </Link>
+                </CardContent>
+              </Card>
             ))}
           </div>
 
@@ -190,7 +238,7 @@ export default function Home() {
       </section>
 
       <section className="py-16 md:py-24 bg-yellow-500 text-black">
-        <div className="container mx-auto px-4 text-center">
+        <div className="container text-center">
           <h2 className="text-3xl md:text-5xl font-extrabold mb-6">WHY CHOOSE TOP USA LAW</h2>
           <p className="text-xl max-w-3xl mx-auto mb-8">
             We're committed to fighting for your rights and securing the compensation you deserve. Our experienced

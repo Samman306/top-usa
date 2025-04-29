@@ -1,110 +1,93 @@
 import type { Metadata } from "next"
+import { Mail, Phone, MapPin, Clock } from "lucide-react"
+import ContactForm from "./contact-form"
 
 export const metadata: Metadata = {
   title: "Contact Us | TOP USA LAW",
   description:
-    "Contact TOP USA LAW for a free consultation. Our experienced attorneys are ready to help with your legal needs.",
+    "Contact TOP USA LAW for expert legal assistance. Schedule a free consultation with our experienced attorneys today.",
 }
 
 export default function ContactPage() {
   return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold mb-8">Contact Us</h1>
+    <div className="container py-12 md:py-16">
+      <div className="mx-auto max-w-4xl text-center">
+        <h1 className="text-3xl md:text-4xl font-bold mb-4">Contact TOP USA LAW</h1>
+        <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+          Our team of experienced attorneys is ready to help with your legal needs. Reach out today for a consultation.
+        </p>
+      </div>
 
-      <div className="grid md:grid-cols-2 gap-12">
-        <div>
-          <p className="text-lg mb-6">
-            Our team of experienced attorneys is ready to help you with your legal needs. Contact us today for a free
-            consultation.
-          </p>
-
-          <div className="space-y-4">
-            <div>
-              <h3 className="text-xl font-semibold mb-1">Main Office</h3>
-              <address className="not-italic">
-                <p>123 Legal Street</p>
-                <p>New York, NY 10001</p>
-              </address>
+      <div className="grid md:grid-cols-3 gap-8 lg:gap-12 mt-12">
+        <div className="md:col-span-1 space-y-8">
+          <div>
+            <h2 className="text-xl font-bold mb-4">Contact Information</h2>
+            <div className="space-y-4">
+              <div className="flex items-start">
+                <Phone className="h-5 w-5 text-primary mr-3 mt-0.5" />
+                <div>
+                  <p className="font-medium">Phone</p>
+                  <p className="text-muted-foreground">(555) 123-4567</p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <Mail className="h-5 w-5 text-primary mr-3 mt-0.5" />
+                <div>
+                  <p className="font-medium">Email</p>
+                  <p className="text-muted-foreground">info@topusalaw.com</p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <MapPin className="h-5 w-5 text-primary mr-3 mt-0.5" />
+                <div>
+                  <p className="font-medium">Main Office</p>
+                  <p className="text-muted-foreground">
+                    123 Legal Avenue, Suite 500
+                    <br />
+                    Metro City, MC 12345
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <Clock className="h-5 w-5 text-primary mr-3 mt-0.5" />
+                <div>
+                  <p className="font-medium">Office Hours</p>
+                  <p className="text-muted-foreground">
+                    Monday - Friday: 9:00 AM - 5:00 PM
+                    <br />
+                    Saturday - Sunday: Closed
+                  </p>
+                </div>
+              </div>
             </div>
+          </div>
 
-            <div>
-              <h3 className="text-xl font-semibold mb-1">Phone</h3>
-              <p>(800) 123-4567</p>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-semibold mb-1">Email</h3>
-              <p>info@topusalaw.com</p>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-semibold mb-1">Hours</h3>
-              <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
-              <p>Saturday: By appointment only</p>
-              <p>Sunday: Closed</p>
+          <div>
+            <h2 className="text-xl font-bold mb-4">Additional Offices</h2>
+            <div className="space-y-4">
+              <div>
+                <p className="font-medium">Downtown Office</p>
+                <p className="text-muted-foreground">
+                  456 Center Street, 10th Floor
+                  <br />
+                  Metro City, MC 12345
+                </p>
+              </div>
+              <div>
+                <p className="font-medium">Suburban Office</p>
+                <p className="text-muted-foreground">
+                  789 Parkway Drive, Suite 300
+                  <br />
+                  Greenville, MC 12346
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-gray-100 p-6 rounded-lg">
-          <h2 className="text-2xl font-bold mb-4">Send Us a Message</h2>
-          <form className="space-y-4">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                placeholder="Your name"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                placeholder="Your email"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                Phone
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                placeholder="Your phone number"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                placeholder="How can we help you?"
-              ></textarea>
-            </div>
-
-            <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded">
-              Send Message
-            </button>
-          </form>
+        <div className="md:col-span-2 bg-card rounded-lg p-6 shadow-sm">
+          <h2 className="text-xl font-bold mb-6">Send Us a Message</h2>
+          <ContactForm />
         </div>
       </div>
     </div>
