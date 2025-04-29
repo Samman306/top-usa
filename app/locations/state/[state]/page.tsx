@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { Suspense } from "react"
-import LocationsClient from "./LocationsClient"
+import StatePageContent from "./StatePageContent"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
@@ -16,7 +16,7 @@ export default function LocationsPage() {
     <main className="bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-8">
         <Suspense fallback={<LocationsLoading />}>
-          <LocationsClient />
+          <StatePageContent />
         </Suspense>
       </div>
       <section className="py-12 md:py-16 bg-gray-800 text-white">

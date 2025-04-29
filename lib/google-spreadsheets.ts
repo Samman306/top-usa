@@ -61,10 +61,10 @@ export function createGoogleSheetsService() {
         } catch (error) {
           console.log("No dedicated States sheet found, falling back to locations data")
         }
-        
+
         // If no States sheet, fall back to getting state info from Locations
         const locationsData = await service.fetchSheet("Locations")
-        
+
         // Extract unique states from locations data
         const stateMap = new Map()
         locationsData.forEach((location: any) => {
@@ -72,18 +72,18 @@ export function createGoogleSheetsService() {
             stateMap.set(location.state_id, {
               id: location.state_id,
               name: location.state_name,
-              abbreviation: location.state_id
+              abbreviation: location.state_id,
             })
           }
         })
-        
+
         return Array.from(stateMap.values())
       } catch (error) {
         console.error("Error in getStatesData:", error)
         return []
       }
     },
-    
+
     // POST: Append data to a sheet
     appendSheet: async (sheetName: string, values: any[]) => {
       try {
@@ -157,8 +157,8 @@ export function createGoogleSheetsService() {
 
         // Use standard Google Sheets API format with proper encoding
         // Fetch only columns A-D with no row limit
-        let range = `${sheetName}!A1:D1000000` // Using only columns A-D instead of A-Z
-        let url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}`
+        const range = `${sheetName}!A1:D1000000` // Using only columns A-D instead of A-Z
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}`
 
         const res = await fetch(url, {
           headers: { Authorization: `Bearer ${accessToken}` },
@@ -195,6 +195,38 @@ export function createGoogleSheetsService() {
         throw error
       }
     },
+    getKeypoints: async ({ citySlug, city }: { citySlug: string; city: string }) => {
+      try {
+        const allRows = await service.fetchSheet("Keypoints")
+        const filteredRows = allRows.filter(
+          (row: any) =>
+            row.CitySlug?.toLowerCase() === citySlug.toLowerCase() || row.City?.toLowerCase() === city.toLowerCase(),
+        )
+        return filteredRows
+      } catch (error) {
+        console.error("Error fetching keypoints:", error)
+        return []
+      }
+    },
+    getAllPracticeAreas: async () => {
+      try {
+        const allRows = await service.fetchSheet("PracticeAreas")
+        return allRows
+      } catch (error) {
+        console.error("Error fetching practice areas:", error)
+        return []
+      }
+    },
+    getStateData: async (stateSlug: string) => {
+      try {
+        const allStates = await service.fetchSheet("States")
+        const state = allStates.find((s: any) => s.slug === stateSlug)
+        return state
+      } catch (error) {
+        console.error("Error fetching state data:", error)
+        return null
+      }
+    },
   }
   return service
 }
@@ -202,6 +234,12 @@ export function createGoogleSheetsService() {
 // Define the City interface
 interface City {
   stateCode?: string
+}
+
+export interface KeypointItem {
+  Title?: string
+  Content: string
+  Section?: string
 }
 
 // Function to fetch Locations by state from Google Sheets
@@ -212,5 +250,31 @@ export async function getLocationsByState(stateCode: string): Promise<City[]> {
     return allLocations.filter((city: City) => city.stateCode?.toLowerCase() === stateCode.toLowerCase())
   } catch (error) {
     throw error
+  }
+}
+
+// Function to fetch Cities by state from Google Sheets
+export async function getCitiesByState(stateCode: string): Promise<any[]> {
+  try {
+    const service = createGoogleSheetsService()
+    const allLocations = await service.fetchSheet("Locations")
+
+    // Filter locations by state code and extract city information
+    const cities = allLocations
+      .filter((location: any) => location.state_id?.toLowerCase() === stateCode.toLowerCase())
+      .map((location: any) => ({
+        id: location.city_id || location.id,
+        name: location.city_name || location.name,
+        state: location.state_name || location.state,
+        stateCode: location.state_id || location.stateCode,
+        description: location.description || "",
+        population: location.population || "",
+        imageUrl: location.image_url || location.imageUrl || "",
+      }))
+
+    return cities
+  } catch (error) {
+    console.error("Error in getCitiesByState:", error)
+    return []
   }
 }
