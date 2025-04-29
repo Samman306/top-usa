@@ -577,7 +577,7 @@ const PracticeAreas = ({ stateName }: { stateName: string }) => {
   )
 }
 
-export default function StatePageContent() {
+export default function StatePageClient() {
   // Get state from URL params
   const params = useParams<{ state: string }>()
   const stateParam = params.state || ""
@@ -610,6 +610,14 @@ export default function StatePageContent() {
     const fetchCities = async () => {
       setIsLoading(true)
       setError(null)
+
+      // Skip API calls during build time
+      if (typeof window === "undefined" && process.env.NODE_ENV === "production") {
+        console.log("Skipping API call during build time")
+        setLocations([])
+        setIsLoading(false)
+        return
+      }
 
       try {
         // Try fetching from our API endpoint first

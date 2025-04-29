@@ -49,6 +49,41 @@ export function createGoogleSheetsService() {
   const spreadsheetId = getEnvVar("GOOGLE_SPREADSHEET_ID")
 
   const service = {
+    // GET: Fetch states data (specifically for nationwide coverage)
+    getStatesData: async () => {
+      try {
+        // First try to get data from a States sheet
+        try {
+          const statesData = await service.fetchSheet("States")
+          if (statesData && statesData.length > 0) {
+            return statesData
+          }
+        } catch (error) {
+          console.log("No dedicated States sheet found, falling back to locations data")
+        }
+        
+        // If no States sheet, fall back to getting state info from Locations
+        const locationsData = await service.fetchSheet("Locations")
+        
+        // Extract unique states from locations data
+        const stateMap = new Map()
+        locationsData.forEach((location: any) => {
+          if (location.state_id && location.state_name) {
+            stateMap.set(location.state_id, {
+              id: location.state_id,
+              name: location.state_name,
+              abbreviation: location.state_id
+            })
+          }
+        })
+        
+        return Array.from(stateMap.values())
+      } catch (error) {
+        console.error("Error in getStatesData:", error)
+        return []
+      }
+    },
+    
     // POST: Append data to a sheet
     appendSheet: async (sheetName: string, values: any[]) => {
       try {
@@ -111,10 +146,10 @@ export function createGoogleSheetsService() {
           console.warn(`Requested sheet "${sheetName}" is not available in this spreadsheet.`)
 
           // If the requested sheet doesn't exist but we have other sheets, throw a more helpful error
-          if (sheetName === "Cities") {
-            // If the user is requesting the Cities sheet but it doesn't exist and we have 'Locations'
+          if (sheetName === "Locations") {
+            // If the user is requesting the Locations sheet but it doesn't exist and we have 'Locations'
             if (availableSheets.includes("Locations")) {
-              console.log(`The 'Cities' sheet doesn't exist, but 'Locations' does - try that instead`)
+              console.log(`The 'Locations' sheet doesn't exist, but 'Locations' does - try that instead`)
               // Continue with 'Locations' instead
             }
           }
@@ -122,8 +157,8 @@ export function createGoogleSheetsService() {
 
         // Use standard Google Sheets API format with proper encoding
         // Fetch only columns A-D with no row limit
-        const range = `${sheetName}!A1:D1000000` // Using only columns A-D instead of A-Z
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}`
+        let range = `${sheetName}!A1:D1000000` // Using only columns A-D instead of A-Z
+        let url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}`
 
         const res = await fetch(url, {
           headers: { Authorization: `Bearer ${accessToken}` },
@@ -169,12 +204,12 @@ interface City {
   stateCode?: string
 }
 
-// Function to fetch cities by state from Google Sheets
-export async function getCitiesByState(stateCode: string): Promise<City[]> {
+// Function to fetch Locations by state from Google Sheets
+export async function getLocationsByState(stateCode: string): Promise<City[]> {
   try {
     const service = await createGoogleSheetsService()
-    const allCities = await service.fetchSheet("Cities")
-    return allCities.filter((city: City) => city.stateCode?.toLowerCase() === stateCode.toLowerCase())
+    const allLocations = await service.fetchSheet("Locations")
+    return allLocations.filter((city: City) => city.stateCode?.toLowerCase() === stateCode.toLowerCase())
   } catch (error) {
     throw error
   }

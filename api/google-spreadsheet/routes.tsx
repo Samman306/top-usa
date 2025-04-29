@@ -84,13 +84,13 @@ export async function GET(request: NextRequest) {
         JSON.stringify({
           error: "GOOGLE_SPREADSHEET_ID not configured",
         }),
-        {
+        { 
           status: 500,
           headers: {
-            "Content-Type": "application/json",
-            "Cache-Control": "no-store, max-age=0",
-          },
-        },
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store, max-age=0',
+          }
+        }
       )
     }
 
@@ -135,7 +135,7 @@ export async function GET(request: NextRequest) {
         // Continue to the next sheet
       }
     }
-
+    
     // If we found a working sheet
     if (successData) {
       return new Response(
@@ -145,13 +145,13 @@ export async function GET(request: NextRequest) {
           sheet: successSheetName,
           requested: requestedSheet || null,
         }),
-        {
+        { 
           status: 200,
           headers: {
-            "Content-Type": "application/json",
-            "Cache-Control": "no-store, max-age=0",
-          },
-        },
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store, max-age=0',
+          } 
+        }
       )
     }
 
@@ -162,13 +162,13 @@ export async function GET(request: NextRequest) {
         error: `Failed to fetch data from any sheet. Last error: ${lastError?.message}`,
         fallback: true,
       }),
-      {
+      { 
         status: 500,
         headers: {
-          "Content-Type": "application/json",
-          "Cache-Control": "no-store, max-age=0",
-        },
-      },
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store, max-age=0',
+        } 
+      }
     )
   } catch (error: any) {
     console.error("Error in Google Spreadsheet API route:", error)
@@ -177,13 +177,13 @@ export async function GET(request: NextRequest) {
         error: error.message || "Failed to fetch sheet data",
         fallback: true, // Signal to client that it should use fallback data
       }),
-      {
+      { 
         status: 500,
         headers: {
-          "Content-Type": "application/json",
-          "Cache-Control": "no-store, max-age=0",
-        },
-      },
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store, max-age=0',
+        } 
+      }
     )
   }
 }

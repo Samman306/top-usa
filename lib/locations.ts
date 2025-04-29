@@ -62,7 +62,25 @@ const fallbackLocation: Location = {
   slug: "prairie-ridge",
 }
 
-// Function to fetch locations from the Google Spreadsheet API with caching
+// Add a timeout to the fetch function
+async function fetchWithTimeout(url, options = {}, timeout = 8000) {
+  const controller = new AbortController()
+  const id = setTimeout(() => controller.abort(), timeout)
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    })
+    clearTimeout(id)
+    return response
+  } catch (error) {
+    clearTimeout(id)
+    throw error
+  }
+}
+
+// Update the fetchLocationsFromAPI function to use fetchWithTimeout
 export async function fetchLocationsFromAPI(forceRefresh = false) {
   // Check if we have valid cached data
   const now = Date.now()
@@ -81,68 +99,8 @@ export async function fetchLocationsFromAPI(forceRefresh = false) {
   const isBuildTime = process.env.NODE_ENV === "production" && isServer
 
   if (isBuildTime) {
-    const apiUrl = "https://v0-lighthouse-law-clone.vercel.app"
-    const apiEndpoint = `${apiUrl}/api/google-spreadsheet?sheet=keypoints`
-
-    try {
-      const response = await fetch(apiEndpoint)
-
-      let data: any = {}
-      try {
-        // Check if the content type is JSON before trying to parse
-        const contentType = response.headers.get("content-type")
-        if (contentType && contentType.includes("application/json")) {
-          data = await response.json()
-        } else {
-          console.error("API returned non-JSON response. Content-Type:", contentType)
-          const textContent = await response.text()
-          console.error("Response starts with:", textContent.substring(0, 100))
-          throw new Error("API returned non-JSON response")
-        }
-      } catch (parseError) {
-        console.error("Error parsing API response:", parseError)
-        throw new Error("Failed to parse API response")
-      }
-
-      // Different API endpoints might return data in different formats
-      // Try to handle both {data: [...]} and direct array format
-      const locationsData = Array.isArray(data) ? data : data.data && Array.isArray(data.data) ? data.data : []
-
-      if (locationsData.length > 0) {
-        return locationsData.map((loc: any) => {
-          // Generate slug if not provided
-          const cityName = loc.city || ""
-          const slug = loc.slug || cityName.toLowerCase().replace(/\s+/g, "-")
-
-          return {
-            city: loc.city || "",
-            state_id: loc.state_id || "",
-            county_fips: loc.county_fips || "",
-            county_name: loc.county_name || "",
-            population: loc.population || "",
-            zips: loc.zips || "",
-            avg_commute_time_minutes: loc.avg_commute_time_minutes || "",
-            estimated_annual_accidents: loc.estimated_annual_accidents || "",
-            nearby_hospitals: loc.nearby_hospitals || "",
-            secondary_keyword: loc.secondary_keyword || "",
-            traffic_congestion_level: loc.traffic_congestion_level || "",
-            main_courthouse: loc.main_courthouse || "",
-            most_dangerous_road: loc.most_dangerous_road || "",
-            main_hospital: loc.main_hospital || "",
-            top_dangerous_intersections: loc.top_dangerous_intersections || "",
-            fatal_crashes_last_year: loc.fatal_crashes_last_year || "",
-            peak_accident_times: loc.peak_accident_times || "",
-            ambulance_response_time_min: loc.ambulance_response_time_min || "",
-            closest_trauma_center: loc.closest_trauma_center || "",
-            uninsured_driver_pct: loc.uninsured_driver_pct || "",
-            personal_injury_case_filings: loc.personal_injury_case_filings || "",
-            slug: slug,
-          }
-        })
-      }
-    } catch (error) {
-      return [fallbackLocation]
-    }
+    // During build time, return fallback data to prevent API calls that might hang
+    console.log("Using fallback location data during build time")
     return [fallbackLocation]
   }
 
@@ -161,7 +119,7 @@ export async function fetchLocationsFromAPI(forceRefresh = false) {
       apiUrl = "https://v0-lighthouse-law-clone.vercel.app/api/google-spreadsheet?sheet=keypoints"
     }
 
-    const response = await fetch(apiUrl)
+    const response = await fetchWithTimeout(apiUrl)
 
     let data: any = {}
     try {
