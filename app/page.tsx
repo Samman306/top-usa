@@ -385,7 +385,7 @@ export default function Home() {
                     <span className="text-gray-300">{attorney.education}</span>
                   </div>
                   <Link
-                    href="/attorneys"
+                    href="/team"
                     className="mt-4 inline-flex items-center text-yellow-500 hover:underline"
                   >
                     View Profile <ArrowRight className="ml-1 h-4 w-4" />
@@ -397,7 +397,7 @@ export default function Home() {
           
           <div className="mt-12 text-center">
             <Link
-              href="/attorneys"
+              href="/team"
               className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium border border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 h-11 px-8 py-2"
             >
               View All Attorneys <ArrowRight className="ml-2 h-5 w-5" />
