@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, Shield, Award, Car, Truck, Building, HardHat, Briefcase, Scale, Users } from "lucide-react"
+import { ArrowRight, Shield, Award, Car, Truck, Building, HardHat, Briefcase, Scale, Users, Clock, BarChart, Landmark } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ClientShutterstockImage } from "@/components/client-shutterstock-image"
 
@@ -105,6 +105,32 @@ export default function Home() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Case Results Statistics Section */}
+      <section className="py-16 bg-gray-900 border-t border-gray-800">
+        <div className="container">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center bg-yellow-500/10 px-3 py-1 rounded-full text-yellow-500 text-sm font-medium mb-4">Our Track Record</div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white">
+              Proven <span className="text-yellow-500">Results</span> For Our Clients
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { value: "$250M+", label: "Recovered for Clients" },
+              { value: "98%", label: "Success Rate" },
+              { value: "5,000+", label: "Cases Won" },
+              { value: "24/7", label: "Client Support" },
+            ].map((stat, i) => (
+              <div key={i} className="text-center p-6 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-yellow-500/50 transition-all">
+                <div className="text-3xl md:text-4xl font-bold text-yellow-500 mb-2">{stat.value}</div>
+                <p className="text-gray-300">{stat.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -237,19 +263,146 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 md:py-24 bg-yellow-500 text-black">
-        <div className="container text-center">
-          <h2 className="text-3xl md:text-5xl font-extrabold mb-6">WHY CHOOSE TOP USA LAW</h2>
-          <p className="text-xl max-w-3xl mx-auto mb-8">
-            We're committed to fighting for your rights and securing the compensation you deserve. Our experienced
-            attorneys provide personalized attention to every case.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-bold bg-black hover:bg-gray-900 text-white h-11 px-8 py-2"
-          >
-            Schedule Your Free Consultation <ArrowRight className="ml-2 h-5 w-5" />
-          </Link>
+      <section className="py-16 md:py-24 bg-gradient-to-b from-yellow-500 to-yellow-600 text-black">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-5xl font-extrabold mb-6">WHY CHOOSE TOP USA LAW</h2>
+            <p className="text-xl max-w-3xl mx-auto mb-8">
+              We're committed to fighting for your rights and securing the compensation you deserve.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <Shield className="h-12 w-12" />,
+                title: "Experienced Attorneys",
+                description: "Our legal team brings decades of combined experience across all practice areas."
+              },
+              {
+                icon: <Award className="h-12 w-12" />,
+                title: "No Fee Unless We Win",
+                description: "We work on a contingency basis - you pay nothing unless we secure compensation for you."
+              },
+              {
+                icon: <Clock className="h-12 w-12" />,
+                title: "24/7 Availability",
+                description: "Legal emergencies don't wait for business hours, and neither do we."
+              },
+              {
+                icon: <Users className="h-12 w-12" />,
+                title: "Personalized Attention",
+                description: "Every case receives direct partner attention and a dedicated legal team."
+              },
+              {
+                icon: <BarChart className="h-12 w-12" />,
+                title: "Proven Track Record",
+                description: "We've secured millions in settlements and verdicts for our clients."
+              },
+              {
+                icon: <Landmark className="h-12 w-12" />,
+                title: "Nationwide Resources",
+                description: "With offices across the country, we can represent you wherever you need us."
+              }
+            ].map((item, i) => (
+              <div key={i} className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-all">
+                <div className="bg-black text-yellow-500 p-3 rounded-full inline-block mb-4">{item.icon}</div>
+                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                <p>{item.description}</p>
+              </div>
+            ))}
+          </div>
+          
+          <div className="mt-12 text-center">
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-bold bg-black hover:bg-gray-900 text-white h-11 px-8 py-2"
+            >
+              Schedule Your Free Consultation <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Attorney Profiles Section */}
+      <section className="py-16 md:py-24 bg-gradient-to-b from-gray-900 to-black">
+        <div className="container">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center bg-yellow-500/10 px-3 py-1 rounded-full text-yellow-500 text-sm font-medium mb-4">Our Legal Team</div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white">
+              Meet Our <span className="text-yellow-500">Top Attorneys</span>
+            </h2>
+            <p className="text-gray-300 mt-4 max-w-3xl mx-auto">
+              Our team of experienced attorneys is dedicated to providing personalized representation for every client.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                name: "Sarah Johnson",
+                title: "Managing Partner",
+                image: "professional female attorney",
+                specialties: ["Personal Injury", "Class Actions"],
+                education: "Harvard Law School"
+              },
+              {
+                name: "Michael Rodriguez",
+                title: "Senior Trial Attorney",
+                image: "professional male attorney hispanic",
+                specialties: ["Car Accidents", "Truck Accidents"],
+                education: "Yale Law School"
+              },
+              {
+                name: "David Chen",
+                title: "Immigration Specialist",
+                image: "professional asian male attorney",
+                specialties: ["Immigration Law", "Work Visas"],
+                education: "Columbia Law School"
+              }
+            ].map((attorney, i) => (
+              <div key={i} className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-yellow-500/50 transition-all group">
+                <div className="relative h-64 overflow-hidden">
+                  <ClientShutterstockImage
+                    query={attorney.image}
+                    alt={attorney.name}
+                    fill
+                    className="object-cover transition-transform group-hover:scale-105"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-white">{attorney.name}</h3>
+                  <p className="text-yellow-500 mb-3">{attorney.title}</p>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {attorney.specialties.map((specialty, idx) => (
+                      <div key={idx} className="text-xs px-2 py-1 bg-gray-700 text-gray-300 rounded-full">
+                        {specialty}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex items-center text-gray-400 text-sm">
+                    <span className="mr-1">Education:</span>
+                    <span className="text-gray-300">{attorney.education}</span>
+                  </div>
+                  <Link
+                    href="/attorneys"
+                    className="mt-4 inline-flex items-center text-yellow-500 hover:underline"
+                  >
+                    View Profile <ArrowRight className="ml-1 h-4 w-4" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="mt-12 text-center">
+            <Link
+              href="/attorneys"
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-lg font-medium border border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 h-11 px-8 py-2"
+            >
+              View All Attorneys <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </div>
         </div>
       </section>
     </>
