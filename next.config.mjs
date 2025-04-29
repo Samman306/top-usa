@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Reduce the size of the build output
+  // Use server-side rendering instead of static export
   output: 'standalone',
-
+  
+  // Disable any export-related features
+  trailingSlash: false,
+  
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -33,8 +36,9 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   
-  // Disable experimental features causing issues
+  // Disable all experimental features
   experimental: {
+    // Disable all experimental features that might cause issues
     optimizeCss: false,
     optimizePackageImports: ['lucide-react'],
   },
