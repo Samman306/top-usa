@@ -33,9 +33,9 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   
-  // Optimize the build process
+  // Disable CSS optimization that's causing the critters issue
   experimental: {
-    optimizeCss: true,
+    optimizeCss: false,
     optimizePackageImports: ['lucide-react'],
   },
 }
