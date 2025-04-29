@@ -7,21 +7,21 @@ import { CallButton } from "@/components/call-button"
 import { ClientShutterstockImage } from "@/components/client-shutterstock-image"
 import { LocalBusinessSchema, BreadcrumbSchema } from "@/app/components/schema-org"
 import { useState, useEffect } from "react"
-import type { Location } from "@/lib/locations"
+import { type Location } from "@/lib/locations"
 import { slugify } from "camote-utils"
 
 type CityPageClientProps = {
-  location: Location
-  citySlug: string
+  location: Location;
+  citySlug: string;
   stateInfo?: {
-    name: string
-    slug: string
-  }
+    name: string;
+    slug: string;
+  };
 }
 
 export default function CityPageClient({ location, citySlug, stateInfo }: CityPageClientProps) {
-  const [state, setState] = useState({ name: "", slug: "" })
-
+  const [state, setState] = useState({ name: '', slug: '' })
+  
   // Set the state on component mount
   useEffect(() => {
     if (stateInfo) {
@@ -62,23 +62,20 @@ export default function CityPageClient({ location, citySlug, stateInfo }: CityPa
               Locations
             </Link>
             <span className="text-gray-600 text-sm">/</span>
-            {state.name && (
-              <>
-                <Link
-                  href={`/locations/state/${slugify(state.slug)}`}
-                  className="text-gray-400 hover:text-yellow-500 text-sm inline-flex items-center"
-                >
-                  {state.name}
-                </Link>
-                <span className="text-gray-600 text-sm">/</span>
-              </>
-            )}
+            {state.name && <>
+              <Link href={`/locations/state/${slugify(state.slug)}`} className="text-gray-400 hover:text-yellow-500 text-sm inline-flex items-center">
+                {state.name}
+              </Link>
+              <span className="text-gray-600 text-sm">/</span>
+            </>}
             <span className="text-sm text-yellow-500">{location.city}</span>
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">Legal Services in {location.city}</h1>
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+                Legal Services in {location.city}
+              </h1>
               <p className="text-xl text-gray-300 max-w-3xl">
                 Our experienced attorneys provide comprehensive legal services in {location.city} and surrounding areas,
                 with deep knowledge of local laws and regulations.
@@ -98,7 +95,9 @@ export default function CityPageClient({ location, citySlug, stateInfo }: CityPa
                 className="object-cover w-full h-full"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-black/80 p-4">
-                <h3 className="text-lg font-medium text-white">{location.city} Legal Services</h3>
+                <h3 className="text-lg font-medium text-white">
+                  {location.city} Legal Services
+                </h3>
                 <p className="text-sm text-gray-300">
                   Serving {location.county_name || "the local"} community with excellence
                 </p>
@@ -109,9 +108,9 @@ export default function CityPageClient({ location, citySlug, stateInfo }: CityPa
                 Premier Legal Services in {location.city}, {state.name}
               </h2>
               <p className="text-gray-300">
-                With a focus on client satisfaction and exceptional outcomes, our legal team provides top-tier services
-                to the {location.city} area. We understand the local laws and courts, giving our clients a distinct
-                advantage.
+                With a focus on client satisfaction and exceptional outcomes, our legal team provides
+                top-tier services to the {location.city} area. We understand the local laws and courts,
+                giving our clients a distinct advantage.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -150,7 +149,9 @@ export default function CityPageClient({ location, citySlug, stateInfo }: CityPa
                   </div>
                   <div>
                     <h4 className="font-medium text-white">Experience</h4>
-                    <p className="text-gray-400 text-sm">20+ years serving {state.name}</p>
+                    <p className="text-gray-400 text-sm">
+                      20+ years serving {state.name}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -167,10 +168,12 @@ export default function CityPageClient({ location, citySlug, stateInfo }: CityPa
       <section className="py-16 bg-gray-950">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Our Practice Areas in {location.city}</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Our Practice Areas in {location.city}
+            </h2>
             <p className="text-gray-300">
-              We specialize in a variety of legal services to serve the diverse needs of our clients in {location.city}{" "}
-              and throughout {state.name}.
+              We specialize in a variety of legal services to serve the diverse needs of our clients
+              in {location.city} and throughout {state.name}.
             </p>
           </div>
 
@@ -209,59 +212,74 @@ export default function CityPageClient({ location, citySlug, stateInfo }: CityPa
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
             <div className="bg-gray-900/50 p-8 rounded-xl border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">Local Expertise & Knowledge</h3>
+              <h3 className="text-xl font-bold text-white mb-4">
+                Local Expertise & Knowledge
+              </h3>
               <p className="text-gray-400">
                 Our attorneys have deep knowledge of {location.city}'s legal landscape,
                 {location.county_name && ` ${location.county_name} County courts,`} and {state.name} law.
               </p>
             </div>
             <div className="bg-gray-900/50 p-8 rounded-xl border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">Personalized Legal Strategy</h3>
+              <h3 className="text-xl font-bold text-white mb-4">
+                Personalized Legal Strategy
+              </h3>
               <p className="text-gray-400">
-                We develop customized legal strategies based on your unique situation and the specific circumstances in{" "}
-                {location.city}.
+                We develop customized legal strategies based on your unique situation and the specific
+                circumstances in {location.city}.
               </p>
             </div>
             <div className="bg-gray-900/50 p-8 rounded-xl border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">Proven Track Record</h3>
+              <h3 className="text-xl font-bold text-white mb-4">
+                Proven Track Record
+              </h3>
               <p className="text-gray-400">
                 Our firm has successfully represented numerous clients in {location.city} and across {state.name},
                 securing favorable outcomes.
               </p>
             </div>
             <div className="bg-gray-900/50 p-8 rounded-xl border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">Accessible & Responsive</h3>
+              <h3 className="text-xl font-bold text-white mb-4">
+                Accessible & Responsive
+              </h3>
               <p className="text-gray-400">
-                We pride ourselves on clear communication and accessibility to our {location.city} clients whenever they
-                need legal guidance.
+                We pride ourselves on clear communication and accessibility to our {location.city} clients
+                whenever they need legal guidance.
               </p>
             </div>
             <div className="bg-gray-900/50 p-8 rounded-xl border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">No Fee Unless We Win</h3>
+              <h3 className="text-xl font-bold text-white mb-4">
+                No Fee Unless We Win
+              </h3>
               <p className="text-gray-400">
-                For personal injury cases in {location.city}, you don't pay unless we secure compensation for your
-                damages.
+                For personal injury cases in {location.city}, you don't pay unless we secure
+                compensation for your damages.
               </p>
             </div>
             <div className="bg-gray-900/50 p-8 rounded-xl border border-gray-800">
-              <h3 className="text-xl font-bold text-white mb-4">Strong Community Ties</h3>
+              <h3 className="text-xl font-bold text-white mb-4">
+                Strong Community Ties
+              </h3>
               <p className="text-gray-400">
-                As active members of the {location.city} community, we're committed to serving our neighbors with
-                integrity and dedication.
+                As active members of the {location.city} community, we're committed to serving our
+                neighbors with integrity and dedication.
               </p>
             </div>
           </div>
         </div>
       </section>
-
+      
       {/* Schema.org structured data */}
-      <LocalBusinessSchema city={location.city} state={state.name} />
-
+      <LocalBusinessSchema 
+        city={location.city}
+        state={state.name}
+      />
+      
       <BreadcrumbSchema
         items={[
           { name: "Home", url: "https://topusalaw.com/" },
           { name: "Locations", url: "https://topusalaw.com/locations/" },
-          { name: location.city, url: `https://topusalaw.com/locations/${location.slug}` },
+          { name: location.city, url: `https://topusalaw.com/locations/${location.slug}` }
         ]}
       />
     </>

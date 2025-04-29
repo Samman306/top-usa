@@ -26,11 +26,15 @@ export default function LocationsPage() {
             Even if your specific city isn't listed, we can still help. Our attorneys are licensed to practice
             throughout each state and can provide remote consultations.
           </p>
-          <Button size="lg" className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold" asChild>
+          <Button 
+            size="lg" 
+            className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold" 
+            asChild
+          >
             <Link href="/contact">
               Contact Us Today <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
-          </Button>
+          </Button> 
         </div>
       </section>
     </main>
