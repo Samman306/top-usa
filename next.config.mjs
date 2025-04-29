@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Use server-side rendering instead of static export
+  // Use the most compatible output format for Vercel
   output: 'standalone',
   
-  // Disable any export-related features
-  trailingSlash: false,
+  // Disable features that might cause deployment issues
+  productionBrowserSourceMaps: false,
   
   eslint: {
     ignoreDuringBuilds: true,
@@ -13,35 +13,21 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   
-  // Optimize images
+  // Simplify image configuration
   images: {
-    domains: ['placeholder.co'],
-    formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 60,
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'placeholder.co',
-        port: '',
-        pathname: '/**',
-      },
-    ],
     unoptimized: true,
+    domains: ['placeholder.co'],
   },
   
-  // Reduce the size of the JavaScript bundles
+  // Optimize build size
   swcMinify: true,
   
   // Disable unnecessary features
   reactStrictMode: true,
   poweredByHeader: false,
   
-  // Disable all experimental features
-  experimental: {
-    // Disable all experimental features that might cause issues
-    optimizeCss: false,
-    optimizePackageImports: ['lucide-react'],
-  },
+  // Remove all experimental features
+  experimental: {},
 }
 
 export default nextConfig
