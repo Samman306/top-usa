@@ -1,3 +1,5 @@
+export const dynamic = "force-static"
+
 import { type NextRequest, NextResponse } from "next/server"
 import * as z from "zod"
 import { createGoogleSheetsService } from "@/lib/google-spreadsheets"
