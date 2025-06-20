@@ -49,3 +49,4 @@ export function BeforeAfterCase({ title, before, after, className }: BeforeAfter
     </div>
   )
 }
+

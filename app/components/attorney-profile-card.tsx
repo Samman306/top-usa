@@ -38,3 +38,4 @@ export function AttorneyProfileCard({ name, title, image, bio, slug, className }
     </div>
   )
 }
+

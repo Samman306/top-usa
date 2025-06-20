@@ -1,9 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, CheckCircle, Shield, Scale, Clock } from "lucide-react"
+import Image from "next/image"
+import { ArrowRight, Shield, Car, Truck, Building, HardHat, Briefcase, Scale, Users } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { allPracticeAreas } from "@/lib/practice-areas"
-import { ClientShutterstockImage } from "@/components/client-shutterstock-image"
 
 export const metadata: Metadata = {
   title: "Practice Areas | TOP USA LAW",
@@ -12,9 +11,156 @@ export const metadata: Metadata = {
 }
 
 export default function PracticeAreasPage() {
+  const practiceAreas = [
+    {
+      title: "Personal Injury",
+      slug: "personal-injury",
+      description: "Comprehensive legal representation for victims of accidents and injuries caused by negligence.",
+      icon: <Shield className="h-10 w-10 text-yellow-500" aria-label="Personal Injury services icon" />,
+      details: [
+        "Catastrophic Injuries",
+        "Traumatic Brain Injuries",
+        "Spinal Cord Injuries",
+        "Burn Injuries",
+        "Wrongful Death",
+        "Medical Malpractice",
+      ],
+    },
+    {
+      title: "Car Accidents",
+      slug: "car-accidents",
+      description: "Expert representation for victims of automobile accidents to secure maximum compensation.",
+      icon: <Car className="h-10 w-10 text-yellow-500" aria-label="Car Accidents services icon" />,
+      details: [
+        "Head-On Collisions",
+        "Rear-End Accidents",
+        "T-Bone Accidents",
+        "Multi-Vehicle Crashes",
+        "Drunk Driving Accidents",
+        "Distracted Driving Accidents",
+      ],
+    },
+    {
+      title: "Truck Accidents",
+      slug: "truck-accidents",
+      description: "Specialized legal support for victims of commercial truck and 18-wheeler accidents.",
+      icon: <Truck className="h-10 w-10 text-yellow-500" aria-label="Truck Accidents services icon" />,
+      details: [
+        "18-Wheeler Accidents",
+        "Delivery Truck Crashes",
+        "Tanker Truck Accidents",
+        "Logging Truck Accidents",
+        "Underride Accidents",
+        "Jackknife Accidents",
+      ],
+    },
+    {
+      title: "Uber and Lyft Accidents",
+      slug: "uber-lyft-accidents",
+      description: "Dedicated representation for passengers, drivers, and others injured in rideshare accidents.",
+      icon: <Car className="h-10 w-10 text-yellow-500" aria-label="Rideshare Accidents services icon" />,
+      details: [
+        "Passenger Injuries",
+        "Rideshare Driver Injuries",
+        "Third-Party Vehicle Accidents",
+        "Pedestrian Accidents",
+        "Insurance Coverage Disputes",
+        "App-On/App-Off Issues",
+      ],
+    },
+    {
+      title: "Work Accidents",
+      slug: "work-accidents",
+      description: "Helping injured workers navigate workers' compensation claims and third-party liability cases.",
+      icon: <Briefcase className="h-10 w-10 text-yellow-500" aria-label="Work Accidents services icon" />,
+      details: [
+        "Workers' Compensation Claims",
+        "Third-Party Liability Cases",
+        "Machinery Accidents",
+        "Toxic Exposure",
+        "Repetitive Stress Injuries",
+        "Workplace Falls",
+      ],
+    },
+    {
+      title: "Construction Accidents",
+      slug: "construction-accidents",
+      description:
+        "Specialized representation for workers injured on construction sites and in building-related accidents.",
+      icon: <HardHat className="h-10 w-10 text-yellow-500" aria-label="Construction Accidents services icon" />,
+      details: [
+        "Falls from Heights",
+        "Scaffold Accidents",
+        "Electrical Accidents",
+        "Trench Collapses",
+        "Equipment Malfunctions",
+        "Struck-by Accidents",
+      ],
+    },
+    {
+      title: "Slip and Fall Injuries",
+      slug: "slip-fall-injuries",
+      description:
+        "Holding property owners accountable for dangerous conditions that cause slip, trip, and fall injuries.",
+      icon: <Building className="h-10 w-10 text-yellow-500" aria-label="Slip and Fall Injuries services icon" />,
+      details: [
+        "Wet Floor Accidents",
+        "Uneven Surface Falls",
+        "Inadequate Lighting Falls",
+        "Staircase Accidents",
+        "Parking Lot Falls",
+        "Snow and Ice Accidents",
+      ],
+    },
+    {
+      title: "White Collar Crimes",
+      slug: "white-collar-crimes",
+      description:
+        "Strategic defense against fraud, embezzlement, and other financial and business-related criminal charges.",
+      icon: <Briefcase className="h-10 w-10 text-yellow-500" aria-label="White Collar Crimes services icon" />,
+      details: [
+        "Fraud Charges",
+        "Embezzlement",
+        "Money Laundering",
+        "Tax Evasion",
+        "Securities Fraud",
+        "Identity Theft",
+      ],
+    },
+    {
+      title: "Immigration Law",
+      slug: "immigration-law",
+      description:
+        "Comprehensive immigration services including visas, green cards, citizenship, and deportation defense.",
+      icon: <Scale className="h-10 w-10 text-yellow-500" aria-label="Immigration Law services icon" />,
+      details: [
+        "Family-Based Immigration",
+        "Employment-Based Immigration",
+        "Deportation Defense",
+        "Asylum Applications",
+        "Citizenship & Naturalization",
+        "DACA & TPS",
+      ],
+    },
+    {
+      title: "Class Actions",
+      slug: "class-actions",
+      description: "Representing groups of individuals harmed by the same corporate misconduct or defective products.",
+      icon: <Users className="h-10 w-10 text-yellow-500" aria-label="Class Actions services icon" />,
+      details: [
+        "Consumer Protection",
+        "Defective Products",
+        "Pharmaceutical Litigation",
+        "Environmental Contamination",
+        "Securities Fraud",
+        "Employment Discrimination",
+      ],
+    },
+  ]
+
   return (
     <>
-      <section className="bg-black text-white py-12">
+      <section className="bg-black text-white py-12 md:py-16">
         <div className="container">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">Our Practice Areas</h1>
           <p className="text-xl text-gray-300 max-w-3xl">
@@ -24,12 +170,12 @@ export default function PracticeAreasPage() {
         </div>
       </section>
 
-      <section className="bg-gradient-to-b from-black to-gray-900 text-white">
+      <section className="py-12 md:py-16 bg-gradient-to-b from-black to-gray-900 text-white">
         <div className="container">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {allPracticeAreas.map((area) => (
+            {practiceAreas.map((area, index) => (
               <Card
-                key={area.id}
+                key={index}
                 className="h-full bg-gray-800 border-gray-700 hover:border-yellow-500/50 transition-colors"
               >
                 <CardHeader>
@@ -48,7 +194,7 @@ export default function PracticeAreasPage() {
                   </ul>
                   <div className="pt-4">
                     <Link
-                      href={area.slug}
+                      href={`/practice-areas/${area.slug}`}
                       className="text-yellow-500 font-medium hover:underline inline-flex items-center"
                     >
                       Learn More <ArrowRight className="ml-1 h-4 w-4" />
@@ -84,87 +230,12 @@ export default function PracticeAreasPage() {
               </Link>
             </div>
             <div className="relative h-[400px] rounded-lg overflow-hidden shadow-lg border border-gray-700">
-              <ClientShutterstockImage
-                query="nationwide legal representation"
+              <Image
+                src="/placeholder.svg?height=800&width=600"
                 alt="Map of the United States showing TOP USA LAW's nationwide coverage"
                 fill
                 className="object-cover"
               />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Choose Us Section */}
-      <section className="py-12 md:py-16 bg-black text-white">
-        <div className="container">
-          <h2 className="text-3xl font-bold mb-8 text-center">Why Choose TOP USA LAW</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="flex flex-col items-center text-center p-6">
-              <Shield className="h-16 w-16 text-yellow-500 mb-4" />
-              <h3 className="text-xl font-bold mb-3">Experienced Attorneys</h3>
-              <p className="text-gray-300">
-                Our team of attorneys has decades of combined experience in various legal fields.
-              </p>
-            </div>
-            <div className="flex flex-col items-center text-center p-6">
-              <Scale className="h-16 w-16 text-yellow-500 mb-4" />
-              <h3 className="text-xl font-bold mb-3">Client-Centered Approach</h3>
-              <p className="text-gray-300">
-                We prioritize our clients' needs and provide personalized attention to every case.
-              </p>
-            </div>
-            <div className="flex flex-col items-center text-center p-6">
-              <Clock className="h-16 w-16 text-yellow-500 mb-4" />
-              <h3 className="text-xl font-bold mb-3">24/7 Availability</h3>
-              <p className="text-gray-300">We are available around the clock to provide assistance and support.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Our Commitment Section */}
-      <section className="py-12 md:py-16 bg-gray-900 text-white">
-        <div className="container">
-          <h2 className="text-3xl font-bold mb-8 text-center">Our Commitment</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="flex items-start">
-              <CheckCircle className="h-6 w-6 text-yellow-500 mr-4" />
-              <div>
-                <h3 className="text-xl font-bold mb-2">Integrity</h3>
-                <p className="text-gray-300">
-                  We uphold the highest standards of ethics and integrity in all our legal services.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start">
-              <CheckCircle className="h-6 w-6 text-yellow-500 mr-4" />
-              <div>
-                <h3 className="text-xl font-bold mb-2">Excellence</h3>
-                <p className="text-gray-300">
-                  We strive for excellence in every aspect of our legal practice, from research to representation.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start">
-              <CheckCircle className="h-6 w-6 text-yellow-500 mr-4" />
-              <div>
-                <h3 className="text-xl font-bold mb-2">Advocacy</h3>
-                <p className="text-gray-300">
-                  We are dedicated to advocating for our clients' rights and interests, providing strong and effective
-                  representation.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start">
-              <CheckCircle className="h-6 w-6 text-yellow-500 mr-4" />
-              <div>
-                <h3 className="text-xl font-bold mb-2">Results-Driven</h3>
-                <p className="text-gray-300">
-                  We are committed to achieving the best possible outcomes for our clients, securing favorable
-                  settlements and verdicts.
-                </p>
-              </div>
             </div>
           </div>
         </div>
@@ -188,3 +259,4 @@ export default function PracticeAreasPage() {
     </>
   )
 }
+

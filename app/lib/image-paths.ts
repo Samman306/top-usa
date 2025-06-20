@@ -71,3 +71,4 @@ export const imagePaths = {
   ogImage: "/images/meridian-law-og.jpg",
   favicon: "/favicon.ico",
 }
+

@@ -1,8 +1,9 @@
 "use client"
+
+import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, Mail, Phone, Instagram, Award, Star, TrendingUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { ClientShutterstockImage } from "@/components/client-shutterstock-image"
 
 export default function TeamPageClient() {
   const attorneys = [
@@ -96,8 +97,8 @@ export default function TeamPageClient() {
 
         {/* Background image */}
         <div className="absolute inset-0 z-0">
-          <ClientShutterstockImage
-            query="person portrait"
+          <Image
+            src="/placeholder.svg?height=1200&width=2000"
             alt="Celebrity attorneys in luxury office"
             fill
             className="object-cover opacity-30"
@@ -143,7 +144,7 @@ export default function TeamPageClient() {
                 className="group bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow border border-gray-700 hover:border-yellow-500/50"
               >
                 <div className="relative h-[350px]">
-                  <ClientShutterstockImage query="person portrait" alt={attorney.name} fill className="object-cover" />
+                  <Image src={attorney.image || "/placeholder.svg"} alt={attorney.name} fill className="object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
                   <div className="absolute bottom-0 left-0 right-0 p-4">
                     <div className="flex items-center">
@@ -212,8 +213,8 @@ export default function TeamPageClient() {
                 <div className="grid md:grid-cols-[250px_1fr] gap-8">
                   <div className="space-y-6">
                     <div className="relative h-[300px] w-full rounded-lg overflow-hidden shadow-lg border-2 border-yellow-500/20">
-                      <ClientShutterstockImage
-                        query="person portrait"
+                      <Image
+                        src={attorney.image || "/placeholder.svg"}
                         alt={attorney.name}
                         fill
                         className="object-cover"
@@ -313,3 +314,4 @@ export default function TeamPageClient() {
     </>
   )
 }
+

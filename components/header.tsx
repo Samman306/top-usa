@@ -1,218 +1,337 @@
 "use client"
 
+import type React from "react"
+
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
-import { Gavel, Menu, X, ChevronDown, Star, Award, TrendingUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Gavel, Menu, X, ChevronDown, Star, Award, TrendingUp } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
+  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import { allPracticeAreas } from "@/lib/practice-areas"
-import { slugify } from "camote-utils"
 
-const states = [
-  "California",
-  "Texas",
-  "Florida",
-  "New York",
-  "Illinois",
-  "Pennsylvania",
-  "Ohio",
-  "Georgia",
-  "North Carolina",
-  "Michigan",
-  "New Jersey",
-  "Virginia",
-].map((state) => ({
-  title: state,
-  href: `/locations/state/${slugify(state)}`,
-}))
-
-const practiceAreas = allPracticeAreas.map((area) => ({
-  title: area.title,
-  href: area.slug,
-}))
-
-export function Header() {
-  const pathname = usePathname()
-  const [isScrolled, setIsScrolled] = useState(false)
+export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
   const [practiceAreasOpen, setPracticeAreasOpen] = useState(false)
   const [locationsOpen, setLocationsOpen] = useState(false)
-  const practiceAreasRef = useRef(null)
-  const locationsRef = useRef(null)
+  const pathname = usePathname()
 
+  const practiceAreasRef = useRef<HTMLDivElement>(null)
+  const locationsRef = useRef<HTMLDivElement>(null)
+
+  // Handle scroll event to change header style
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
+      if (window.scrollY > 10) {
+        setIsScrolled(true)
+      } else {
+        setIsScrolled(false)
+      }
     }
+
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const togglePracticeAreas = () => setPracticeAreasOpen((prev) => !prev)
-  const toggleLocations = () => setLocationsOpen((prev) => !prev)
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsOpen(false)
+    setPracticeAreasOpen(false)
+    setLocationsOpen(false)
+  }, [pathname])
+
+  // Handle clicks outside of dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (practiceAreasRef.current && !practiceAreasRef.current.contains(event.target as Node)) {
+        setPracticeAreasOpen(false)
+      }
+      if (locationsRef.current && !locationsRef.current.contains(event.target as Node)) {
+        setLocationsOpen(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("scroll", handleClickOutside)
+  }, [])
+
+  // Toggle dropdown functions
+  const togglePracticeAreas = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setPracticeAreasOpen(!practiceAreasOpen)
+    setLocationsOpen(false)
+  }
+
+  const toggleLocations = (e: React.MouseEvent) => {
+    e.preventDefault()
+    setLocationsOpen(!locationsOpen)
+    setPracticeAreasOpen(false)
+  }
 
   return (
     <header
       className={cn(
-        "sticky top-0 bg-black/95 z-50 w-full transition-all duration-150 font-sans text-white shadow-md",
-        isScrolled ? "bg-black/95" : "bg-gradient-to-r from-black via-gray-900 to-black",
+        "sticky top-0 z-50 w-full transition-all duration-200",
+        isScrolled ? "bg-black/95 backdrop-blur-sm shadow-sm" : "bg-black",
       )}
     >
-      <div
-        className={cn(
-          "container mx-auto px-3 sm:px-4 md:px-6 flex items-center justify-between transition-all duration-300",
-          isScrolled ? "h-16" : "h-20",
-        )}
-      >
-        <Link href="/" className="flex items-center space-x-2 sm:space-x-3 px-1 group">
-          <Gavel className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-yellow-500 transition-transform duration-300 group-hover:rotate-12" />
-          <span className="font-black text-lg sm:text-xl tracking-tight group-hover:scale-105 transition-transform duration-300">
+      <div className="container flex h-20 items-center justify-between">
+        <Link href="/" className="flex items-center space-x-3">
+          <Gavel className="h-9 w-9 text-yellow-500" />
+          <span className="font-extrabold text-2xl text-white tracking-tight">
             TOP USA <span className="text-yellow-500">LAW</span>
           </span>
         </Link>
 
-        {/* Desktop Nav */}
-        <div className="hidden lg:flex items-center">
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center">
           <NavigationMenu className="mr-6">
-            <NavigationMenuList className="flex items-center gap-3">
-              <Link
-                href="/"
-                className={cn("py-2 px-1", pathname === "/" ? "text-yellow-500 font-medium" : "hover:text-yellow-600")}
-              >
-                Home
-              </Link>
-              <Link
-                href="/about"
-                className={cn(
-                  "py-2 px-1",
-                  pathname === "/about" ? "text-yellow-500 font-medium" : "hover:text-yellow-600",
-                )}
-              >
-                About
-              </Link>
-
-              <NavigationMenuItem className="px-0">
-                <NavigationMenuTrigger className="!bg-transparent !text-white hover:!text-yellow-600 focus:!bg-transparent hover:!bg-transparent">
-                  Practice Areas
-                </NavigationMenuTrigger>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <Link href="/" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()} active={pathname === "/"}>
+                    Home
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href="/about" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()} active={pathname === "/about"}>
+                    About
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Practice Areas</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <DesktopDropdown viewAllLinks="/practice-areas" items={practiceAreas} type="practice" />
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                    {[
+                      { title: "Personal Injury", href: "/practice-areas/personal-injury" },
+                      { title: "Car Accidents", href: "/practice-areas/car-accidents" },
+                      { title: "Truck Accidents", href: "/practice-areas/truck-accidents" },
+                      { title: "Uber and Lyft Accidents", href: "/practice-areas/uber-lyft-accidents" },
+                      { title: "Work Accidents", href: "/practice-areas/work-accidents" },
+                      { title: "Construction Accidents", href: "/practice-areas/construction-accidents" },
+                      { title: "Slip and Fall Injuries", href: "/practice-areas/slip-fall-injuries" },
+                      { title: "White Collar Crimes", href: "/practice-areas/white-collar-crimes" },
+                      { title: "Immigration Law", href: "/practice-areas/immigration-law" },
+                      { title: "Class Actions", href: "/practice-areas/class-actions" },
+                    ].map((item) => (
+                      <li key={item.title}>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            href={item.href}
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          >
+                            <div className="text-sm font-medium leading-none">{item.title}</div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    ))}
+                  </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-
-              <NavigationMenuItem className="px-0">
-                <NavigationMenuTrigger className="!bg-transparent !text-white hover:!text-yellow-600 focus:!bg-transparent hover:!bg-transparent">
-                  Locations
-                </NavigationMenuTrigger>
+              <NavigationMenuItem>
+                <Link href="/team" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()} active={pathname === "/team"}>
+                    Our Attorneys
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Locations</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <DesktopDropdown viewAllLinks="/locations" items={states} type="location" />
+                  <div className="p-4 w-[400px] md:w-[600px] lg:w-[700px]">
+                    <div className="mb-3">
+                      <Link href="/locations" className="text-sm font-medium hover:underline">
+                        View All Locations
+                      </Link>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                      {[
+                        "California",
+                        "Texas",
+                        "Florida",
+                        "New York",
+                        "Illinois",
+                        "Pennsylvania",
+                        "Ohio",
+                        "Georgia",
+                        "North Carolina",
+                        "Michigan",
+                        "New Jersey",
+                        "Virginia",
+                      ].map((state) => (
+                        <Link
+                          key={state}
+                          href={`/locations/states/${state.toLowerCase().replace(/\s+/g, "-")}`}
+                          className="text-sm hover:underline"
+                        >
+                          {state}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-
-              <Link
-                href="/team"
-                className={cn("py-2", pathname === "/team" ? "text-yellow-500 font-medium" : "hover:text-yellow-600")}
-              >
-                Attorneys
-              </Link>
-              <Link
-                href="/nationwide-coverage"
-                title="Nationwide Coverage"
-                className={cn(
-                  "py-2",
-                  pathname === "/nationwide-coverage" ? "text-yellow-500 font-medium" : "hover:text-yellow-600",
-                )}
-              >
-                {" "}
-                Coverage
-              </Link>
-              <Link
-                href="/contact"
-                className={cn(
-                  "py-2",
-                  pathname === "/contact" ? "text-yellow-500 font-medium" : "hover:text-yellow-600",
-                )}
-              >
-                Contact
-              </Link>
+              <NavigationMenuItem>
+                <Link href="/contact" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()} active={pathname === "/contact"}>
+                    Contact
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
 
-          <div className="hidden xl:flex items-center space-x-4 mr-6 px-4 py-2 rounded-full">
+          <div className="hidden lg:flex items-center space-x-2 mr-6">
             <div className="flex items-center">
-              <Star className="h-5 w-5 text-yellow-500 mr-1 animate-pulse" />
-              <span className="text-sm">5.0</span>
+              <Star className="h-5 w-5 text-yellow-500 mr-1" />
+              <span className="text-sm text-white">5.0</span>
             </div>
-            <div className="h-4 border-r border-yellow-500/20"></div>
+            <div className="h-4 border-r border-gray-600"></div>
             <div className="flex items-center">
               <Award className="h-5 w-5 text-yellow-500 mr-1" />
-              <span className="text-xs">Top Rated</span>
+              <span className="text-sm text-white">Top Rated</span>
             </div>
-            <div className="h-4 border-r border-yellow-500/20"></div>
+            <div className="h-4 border-r border-gray-600"></div>
             <div className="flex items-center">
               <TrendingUp className="h-5 w-5 text-yellow-500 mr-1" />
-              <span className="text-xs">Millions Won</span>
+              <span className="text-sm text-white">Millions Won</span>
             </div>
           </div>
 
-          <Button
-            asChild
-            className="ml-2 bg-gradient-to-r from-yellow-500 to-amber-400 hover:from-amber-400 hover:to-yellow-500 text-black font-bold shadow-md shadow-yellow-500/20 transition hover:scale-105"
-          >
+          <Button asChild className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold">
             <Link href="/contact">FREE CONSULTATION</Link>
           </Button>
         </div>
 
         {/* Mobile Menu Button */}
-        <button
-          className="lg:hidden p-3 rounded-md hover:bg-yellow-500/10 transition"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
-        >
+        <button className="md:hidden" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu">
           {isOpen ? <X className="h-6 w-6 text-white" /> : <Menu className="h-6 w-6 text-white" />}
         </button>
       </div>
 
-      {/* Mobile & Tablet Navigation */}
+      {/* Mobile Navigation */}
       {isOpen && (
-        <div className="lg:hidden bg-gradient-to-b from-black to-gray-900 border-t border-yellow-500/10">
+        <div className="md:hidden bg-black">
           <div className="container py-4 space-y-4">
-            <MobileLink href="/" label="Home" pathname={pathname} />
-            <MobileLink href="/about" label="About" pathname={pathname} />
+            <Link
+              href="/"
+              className={cn("block py-2 text-lg", pathname === "/" ? "text-yellow-500 font-medium" : "text-white")}
+            >
+              Home
+            </Link>
+            <Link
+              href="/about"
+              className={cn("block py-2 text-lg", pathname === "/about" ? "text-yellow-500 font-medium" : "text-white")}
+            >
+              About
+            </Link>
 
             {/* Practice Areas Dropdown */}
-            <MobileDropdown
-              title="Practice Areas"
-              open={practiceAreasOpen}
-              toggle={togglePracticeAreas}
-              items={practiceAreas}
-            />
+            <div className="py-2" ref={practiceAreasRef}>
+              <button
+                className="flex items-center justify-between w-full cursor-pointer text-lg text-white"
+                onClick={togglePracticeAreas}
+                aria-expanded={practiceAreasOpen}
+                aria-controls="practice-areas-dropdown"
+              >
+                <span>Practice Areas</span>
+                <ChevronDown className={`h-4 w-4 transition-transform ${practiceAreasOpen ? "rotate-180" : ""}`} />
+              </button>
+              <div
+                id="practice-areas-dropdown"
+                className={`pl-4 mt-2 space-y-2 ${practiceAreasOpen ? "block" : "hidden"}`}
+              >
+                {[
+                  { title: "Personal Injury", href: "/practice-areas/personal-injury" },
+                  { title: "Car Accidents", href: "/practice-areas/car-accidents" },
+                  { title: "Truck Accidents", href: "/practice-areas/truck-accidents" },
+                  { title: "Uber and Lyft Accidents", href: "/practice-areas/uber-lyft-accidents" },
+                  { title: "Work Accidents", href: "/practice-areas/work-accidents" },
+                  { title: "Construction Accidents", href: "/practice-areas/construction-accidents" },
+                  { title: "Slip and Fall Injuries", href: "/practice-areas/slip-fall-injuries" },
+                  { title: "White Collar Crimes", href: "/practice-areas/white-collar-crimes" },
+                  { title: "Immigration Law", href: "/practice-areas/immigration-law" },
+                  { title: "Class Actions", href: "/practice-areas/class-actions" },
+                ].map((item) => (
+                  <Link key={item.title} href={item.href} className="block py-1 text-base text-gray-300">
+                    {item.title}
+                  </Link>
+                ))}
+              </div>
+            </div>
 
-            <MobileLink href="/team" label="Our Attorneys" pathname={pathname} />
+            <Link
+              href="/team"
+              className={cn("block py-2 text-lg", pathname === "/team" ? "text-yellow-500 font-medium" : "text-white")}
+            >
+              Our Attorneys
+            </Link>
 
             {/* Locations Dropdown */}
-            <MobileDropdown
-              title="Locations"
-              open={locationsOpen}
-              toggle={toggleLocations}
-              items={states.map(({ title, href }) => ({ title, href }))}
-            />
+            <div className="py-2" ref={locationsRef}>
+              <button
+                className="flex items-center justify-between w-full cursor-pointer text-lg text-white"
+                onClick={toggleLocations}
+                aria-expanded={locationsOpen}
+                aria-controls="locations-dropdown"
+              >
+                <span>Locations</span>
+                <ChevronDown className={`h-4 w-4 transition-transform ${locationsOpen ? "rotate-180" : ""}`} />
+              </button>
+              <div id="locations-dropdown" className={`pl-4 mt-2 ${locationsOpen ? "block" : "hidden"}`}>
+                <Link href="/locations" className="block py-1 text-base font-medium text-gray-300">
+                  View All Locations
+                </Link>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  {[
+                    "California",
+                    "Texas",
+                    "Florida",
+                    "New York",
+                    "Illinois",
+                    "Pennsylvania",
+                    "Ohio",
+                    "Georgia",
+                    "North Carolina",
+                    "Michigan",
+                    "New Jersey",
+                    "Virginia",
+                  ].map((state) => (
+                    <Link
+                      key={state}
+                      href={`/locations/states/${state.toLowerCase().replace(/\s+/g, "-")}`}
+                      className="block py-1 text-sm text-gray-300"
+                    >
+                      {state}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
 
-            <MobileLink href="/nationwide-coverage" label="Nationwide Coverage" pathname={pathname} />
-            <MobileLink href="/contact" label="Contact" pathname={pathname} />
-
-            <Button
-              asChild
-              className="w-full mt-6 bg-gradient-to-r from-yellow-500 to-amber-400 hover:from-amber-400 hover:to-yellow-500 text-black font-bold shadow-lg shadow-yellow-500/20 hover:scale-105"
+            <Link
+              href="/contact"
+              className={cn(
+                "block py-2 text-lg",
+                pathname === "/contact" ? "text-yellow-500 font-medium" : "text-white",
+              )}
             >
+              Contact
+            </Link>
+
+            <Button asChild className="w-full mt-4 bg-yellow-500 hover:bg-yellow-600 text-black font-bold">
               <Link href="/contact">FREE CONSULTATION</Link>
             </Button>
           </div>
@@ -222,96 +341,3 @@ export function Header() {
   )
 }
 
-function MobileLink({ href, label, pathname }: { href: string; label: string; pathname: string }) {
-  return (
-    <Link
-      href={href}
-      className={cn(
-        "block py-2 text-lg transition hover:translate-x-1",
-        pathname === href ? "text-yellow-500 font-medium" : "text-white hover:text-yellow-600",
-      )}
-    >
-      {label}
-    </Link>
-  )
-}
-
-function MobileDropdown({
-  title,
-  open,
-  toggle,
-  items,
-}: {
-  title: string
-  open: boolean
-  toggle: () => void
-  items: { title: string; href: string }[]
-}) {
-  return (
-    <div className="py-2">
-      <button
-        className="flex items-center justify-between w-full text-lg text-white hover:text-yellow-600 transition"
-        onClick={toggle}
-      >
-        <span>{title}</span>
-        <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
-      </button>
-      {open && (
-        <div className="pl-4 mt-2 space-y-2 max-h-60 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-yellow-600 scrollbar-track-transparent">
-          {items.map((item) => (
-            <Link
-              key={item.title}
-              href={item.href}
-              className="block py-1 text-base text-gray-300 hover:text-yellow-600 transition hover:translate-x-1"
-            >
-              {item.title}
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
-function DesktopDropdown({
-  viewAllLinks,
-  items,
-  type,
-}: {
-  viewAllLinks: string
-  items: { title: string; href: string }[]
-  type: "practice" | "location"
-}) {
-  return (
-    <div className="p-4 w-full sm:w-[400px] md:w-[500px] lg:w-[600px] bg-white rounded-lg shadow-md">
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-        {type === "location"
-          ? items.map((state) => (
-              <Link
-                key={state.title}
-                href={state.href}
-                className="block truncate rounded-md px-3 py-1.5 text-sm text-gray-800 hover:bg-yellow-50 hover:text-yellow-700 transition"
-              >
-                {state.title}
-              </Link>
-            ))
-          : items.map((item) => (
-              <Link
-                key={item.title}
-                href={item.href}
-                className="block truncate rounded-md px-3 py-1.5 text-sm text-gray-800 hover:bg-yellow-50 hover:text-yellow-700 transition"
-              >
-                {item.title}
-              </Link>
-            ))}
-      </div>
-      <div className="mt-3 text-right">
-        <Link href={viewAllLinks} className="text-sm font-medium text-yellow-700 hover:underline transition">
-          View All →
-        </Link>
-      </div>
-    </div>
-  )
-}
-
-export default Header

@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = url
 
   // Handle location/service redirects to location-service format
-  // Example: /locations/cities/los-angeles/car-accident/ → /los-angeles-car-accident/
+  // Example: /los-angeles/car-accident/ → /los-angeles-car-accident/
   const locationServicePattern = /^\/([a-z-]+)\/([a-z-]+)\/?$/
   if (pathname.match(locationServicePattern)) {
     const [, location, service] = pathname.split("/")
@@ -53,3 +53,4 @@ export const config = {
     "/:location/:service",
   ],
 }
+

@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation"
 import { ArrowRight } from "lucide-react"
-import { useEffect, useState } from "react"
 
 interface ContactUsButtonProps {
   className?: string
@@ -12,15 +11,10 @@ interface ContactUsButtonProps {
 
 export function ContactUsButton({ className = "", variant = "primary", size = "default" }: ContactUsButtonProps) {
   const router = useRouter()
-  const [isClient, setIsClient] = useState(false)
-
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
 
   // Define base styles
   const baseStyles =
-    "inline-flex items-center justify-center whitespace-nowrap rounded-md font-bold transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2"
+    "inline-flex items-center justify-center whitespace-nowrap rounded-md font-bold transition-colors cursor-pointer"
 
   // Add size-specific styles
   const sizeStyles = {
@@ -31,9 +25,9 @@ export function ContactUsButton({ className = "", variant = "primary", size = "d
 
   // Add variant-specific styles
   const variantStyles = {
-    primary: "bg-yellow-500 hover:bg-yellow-600 text-black focus:ring-yellow-500",
-    secondary: "bg-black hover:bg-gray-900 text-white border border-black focus:ring-black",
-    outline: "bg-transparent border border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 focus:ring-yellow-500",
+    primary: "bg-yellow-500 hover:bg-yellow-600 text-black",
+    secondary: "bg-black hover:bg-gray-900 text-white border border-black",
+    outline: "bg-transparent border border-yellow-500 text-yellow-500 hover:bg-yellow-500/10",
   }
 
   const combinedStyles = `${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`
@@ -42,20 +36,10 @@ export function ContactUsButton({ className = "", variant = "primary", size = "d
     router.push("/contact")
   }
 
-  if (!isClient) {
-    return (
-      <button
-        className="inline-flex items-center justify-center whitespace-nowrap rounded-md font-bold h-11 px-6 py-2 bg-yellow-500 text-black"
-        aria-label="Contact Us"
-      >
-        Contact Us Today
-      </button>
-    )
-  }
-
   return (
-    <button onClick={handleClick} className={combinedStyles} aria-label="Contact Us">
+    <button onClick={handleClick} className={combinedStyles}>
       Contact Us Today <ArrowRight className="ml-2 h-4 w-4" />
     </button>
   )
 }
+

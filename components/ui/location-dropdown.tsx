@@ -95,3 +95,4 @@ export function LocationDropdown({ title, items, baseUrl, variant = "default" }:
     </div>
   )
 }
+

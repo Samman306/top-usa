@@ -61,16 +61,13 @@ export default function Footer() {
                 <Youtube className="h-5 w-5 text-yellow-500" />
               </a>
             </div>
-            <div className="flex items-center gap-2 rounded-full shadow-sm">
-              <div className="flex items-center gap-[2px]">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 text-yellow-400 drop-shadow-sm" />
-                ))}
-              </div>
-              <span className="text-sm text-gray-300 font-medium">
-                <span className="text-yellow-400 font-semibold mr-1">5.0</span> from{" "}
-                <span className="text-white">1,200+</span> reviews
-              </span>
+            <div className="flex items-center space-x-2">
+              <Star className="h-5 w-5 text-yellow-500" />
+              <Star className="h-5 w-5 text-yellow-500" />
+              <Star className="h-5 w-5 text-yellow-500" />
+              <Star className="h-5 w-5 text-yellow-500" />
+              <Star className="h-5 w-5 text-yellow-500" />
+              <span className="ml-2 text-gray-400">5.0 from 1,200+ reviews</span>
             </div>
           </div>
 
@@ -129,7 +126,6 @@ export default function Footer() {
               {[
                 { title: "Our Attorneys", href: "/team" },
                 { title: "About Us", href: "/about" },
-                { title: "Nationwide Coverage", href: "/nationwide-coverage" },
                 { title: "Contact", href: "/contact" },
               ].map((item) => (
                 <li key={item.title}>
@@ -199,3 +195,4 @@ export default function Footer() {
     </footer>
   )
 }
+

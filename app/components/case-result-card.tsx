@@ -23,7 +23,7 @@ export function CaseResultCard({
       <div className="relative h-40">
         <Image
           src={image || "/images/case-results-placeholder.jpg"}
-          alt={`${title} case result - ${amount} recovery for client represented by Meridian Law Group`}
+          alt={`${title} case result - $${amount} recovery for client represented by Meridian Law Group`}
           fill
           className="object-cover"
         />
@@ -38,3 +38,4 @@ export function CaseResultCard({
     </div>
   )
 }
+

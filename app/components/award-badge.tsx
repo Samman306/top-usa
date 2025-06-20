@@ -18,3 +18,4 @@ export function AwardBadge({ image, alt, title, className }: AwardBadgeProps) {
     </div>
   )
 }
+

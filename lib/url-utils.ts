@@ -1,7 +1,6 @@
 /**
  * Utility functions for URL handling
  */
-import { allPracticeAreas } from "./practice-areas"
 
 /**
  * Safely generates a URL for a city page
@@ -44,14 +43,19 @@ export function getCityServiceUrl(citySlug: string, serviceSlug: string): string
 /**
  * Validates if a service slug is valid
  */
-
 export function isValidService(serviceSlug: string): boolean {
-  // Extract slugs from allPracticeAreas and format them properly
-  const validServices = allPracticeAreas.map((area) => {
-    // Extract the last part of the slug path which is the actual service slug
-    const slug = area.slug.split("/").pop() || ""
-    return slug
-  })
+  const validServices = [
+    "personal-injury",
+    "car-accidents",
+    "truck-accidents",
+    "uber-lyft-accidents",
+    "work-accidents",
+    "construction-accidents",
+    "slip-fall-injuries",
+    "white-collar-crimes",
+    "immigration-law",
+    "class-actions",
+  ]
 
   return validServices.includes(serviceSlug.toLowerCase().trim())
 }
@@ -68,9 +72,3 @@ export function getServiceNameFromSlug(slug: string): string {
     .join(" ")
 }
 
-export function unslugifyAndUCWords(slug: string): string {
-  if (!slug) return ""
-  const words = slug.split("-")
-  const ucWords = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-  return ucWords.join(" ")
-}

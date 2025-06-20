@@ -31,3 +31,4 @@ export function getMapImage(locationSlug: string): string {
   // In a real implementation, you might have different maps for different locations
   return imagePaths.locations.maps.default
 }
+

@@ -32,3 +32,4 @@ export function MediaAppearanceCard({ image, title, description, link, className
     </div>
   )
 }
+
