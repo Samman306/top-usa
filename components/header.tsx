@@ -90,10 +90,10 @@ export function Header() {
                 Home
               </Link>
               <Link
-                href="/about"
+                href="/about-us"
                 className={cn(
                   "py-2 px-1",
-                  pathname === "/about" ? "text-yellow-500 font-medium" : "hover:text-yellow-600",
+                  pathname === "/about-us" ? "text-yellow-500 font-medium" : "hover:text-yellow-600",
                 )}
               >
                 About
@@ -104,7 +104,11 @@ export function Header() {
                   Practice Areas
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <DesktopDropdown viewAllLinks="/practice-areas" items={practiceAreas} type="practice" />
+                <DesktopDropdown
+                    viewAllLinks="/practice-areas"
+                    items={practiceAreas}
+                    type="practice"
+                  />
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
@@ -113,7 +117,11 @@ export function Header() {
                   Locations
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <DesktopDropdown viewAllLinks="/locations" items={states} type="location" />
+                  <DesktopDropdown
+                    viewAllLinks="/locations"
+                    items={states}
+                    type="location"
+                  />
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
@@ -186,7 +194,7 @@ export function Header() {
         <div className="lg:hidden bg-gradient-to-b from-black to-gray-900 border-t border-yellow-500/10">
           <div className="container py-4 space-y-4">
             <MobileLink href="/" label="Home" pathname={pathname} />
-            <MobileLink href="/about" label="About" pathname={pathname} />
+            <MobileLink href="/about-us" label="About" pathname={pathname} />
 
             {/* Practice Areas Dropdown */}
             <MobileDropdown
@@ -270,13 +278,14 @@ function MobileDropdown({
         </div>
       )}
     </div>
-  )
+  );
+  
 }
 
 function DesktopDropdown({
   viewAllLinks,
   items,
-  type,
+  type
 }: {
   viewAllLinks: string
   items: { title: string; href: string }[]
@@ -285,32 +294,33 @@ function DesktopDropdown({
   return (
     <div className="p-4 w-full sm:w-[400px] md:w-[500px] lg:w-[600px] bg-white rounded-lg shadow-md">
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-        {type === "location"
-          ? items.map((state) => (
-              <Link
-                key={state.title}
-                href={state.href}
-                className="block truncate rounded-md px-3 py-1.5 text-sm text-gray-800 hover:bg-yellow-50 hover:text-yellow-700 transition"
-              >
-                {state.title}
-              </Link>
-            ))
-          : items.map((item) => (
-              <Link
-                key={item.title}
-                href={item.href}
-                className="block truncate rounded-md px-3 py-1.5 text-sm text-gray-800 hover:bg-yellow-50 hover:text-yellow-700 transition"
-              >
-                {item.title}
-              </Link>
-            ))}
-      </div>
-      <div className="mt-3 text-right">
-        <Link href={viewAllLinks} className="text-sm font-medium text-yellow-700 hover:underline transition">
-          View All →
+        {type === "location" ? items.map((state) => (
+        <Link
+          key={state.title}
+          href={state.href}
+          className="block truncate rounded-md px-3 py-1.5 text-sm text-gray-800 hover:bg-yellow-50 hover:text-yellow-700 transition"
+        >
+          {state.title}
         </Link>
-      </div>
+      )) : items.map((item) => (
+        <Link
+          key={item.title}
+          href={item.href}
+          className="block truncate rounded-md px-3 py-1.5 text-sm text-gray-800 hover:bg-yellow-50 hover:text-yellow-700 transition"
+        >
+          {item.title}
+        </Link>
+      ))}
     </div>
+    <div className="mt-3 text-right">
+      <Link
+        href={viewAllLinks}
+        className="text-sm font-medium text-yellow-700 hover:underline transition"
+      >
+        View All →
+      </Link>
+    </div>
+  </div>
   )
 }
 

@@ -9,7 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Main routes
   const mainRoutes = [
     "",
-    "/about",
+    "/about-us",
     "/team",
     "/contact",
     "/locations",
